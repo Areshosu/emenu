@@ -1,0 +1,13 @@
+.top-bar {
+    overflow-x: auto;
+}
+
+.top-bar-item {
+    border: 1px solid rgb(213, 213, 213);
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.top-bar-item-content {
+    text-align: center;
+}
