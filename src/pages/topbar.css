@@ -1,13 +1,31 @@
-.top-bar {
-    overflow-x: auto;
+.top-bar-scrollview {
+    border: 1px solid rgb(213, 213, 213);
+    overflow-x: scroll;
 }
 
 .top-bar-item {
-    border: 1px solid rgb(213, 213, 213);
+    border-left: 1px solid rgb(213, 213, 213);
     padding-top: 15px;
     padding-bottom: 15px;
+    cursor: pointer;
 }
 
 .top-bar-item-content {
+    text-align: center;
+}
+
+
+.subtop-bar-scrollview {
+    border: 1px solid rgb(213, 213, 213);
+    overflow-x: scroll;
+}
+
+.subtop-bar-item {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    cursor: pointer;
+}
+
+.subtop-bar-item-content {
     text-align: center;
 }

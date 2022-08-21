@@ -3,14 +3,17 @@
     background-color: grey;
     text-align: center;
     margin: 5px;
-    border-radius: 10px;
+    border-radius: 8px;
     /* box-shadow: 5px 5px; */
 }
 
 .item-box {
     height: 350px;
     padding: 10px;
-    background-color: rgb(219, 153, 153);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position-x: center;
+    background-position-y: center;
 }
 
 .item-description {
@@ -23,5 +26,48 @@
 .item-btn {
     margin-top: 10px;
     margin-bottom: 5px;
-    width: 90%;
+    width: 95%;
+}
+
+.gridbar {
+    padding-left: 25px;
+}
+
+.gridtitle {
+    display: block;
+    font-size: 6vw;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.gridsubtitle {
+    display: block;
+    margin-left: 15px;
+    margin-bottom: 15px;
+    font-size: 4vw;
+}
+
+.divider {
+    margin-top: 10x;
+    margin-bottom: 15px;
+}
+
+@media screen and (min-width: 750px) {
+    .gridtitle {
+        font-size: 3vw;
+    }
+
+    .gridsubtitle {
+        font-size: 2vw;
+    }
+
+    @media screen and (min-width: 1450px) {
+        .gridtitle {
+            font-size: 2vw;
+        }
+    
+        .gridsubtitle {
+            font-size: 1vw;
+        }
+    }
 }

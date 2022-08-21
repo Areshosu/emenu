@@ -5,10 +5,12 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import React from 'react';
 import Home from './pages/home';
 import MenuItems from './pages/menuitems';
+import TopBar from './pages/topbar';
 
 function App() {
   return (
     <BrowserRouter>
+    <TopBar />
       <Routes>
         <Route path="/dashboard" element={ <Home />}>
           <Route path="hello" element={<Counters />} />
