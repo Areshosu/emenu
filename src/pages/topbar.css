@@ -1,3 +1,31 @@
+.upper-bar {
+    width: 100%;
+}
+
+.upper-bar-item {
+    margin-left: 20px;
+    font-size: larger;
+    text-align: left;
+    font-weight: bolder;
+}
+
+.search-bar {
+    width: 50%;
+    margin-left: auto;
+    display: block;
+}
+
+@media screen and (max-width: 600px) {
+    .search-bar {
+        width: 100%;
+    }
+
+    .upper-bar-item {
+        margin-left: 0px;
+        text-align: center;
+    }
+}
+
 .top-bar-scrollview {
     border: 1px solid rgb(213, 213, 213);
     overflow-x: scroll;
@@ -21,6 +49,7 @@
 }
 
 .subtop-bar-item {
+    border-left: 1px solid rgb(213, 213, 213);
     padding-top: 5px;
     padding-bottom: 5px;
     cursor: pointer;

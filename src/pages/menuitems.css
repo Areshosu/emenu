@@ -1,10 +1,22 @@
+.carousel-bar {
+    margin: 20px;
+}
+
+.carousel-item {
+    height: 250px;
+    color: #fff;
+    line-height: 160px;
+    text-align: center;
+    background: rgb(255, 183, 50);
+}
+
 .item-container {
     padding: 7px;
-    background-color: grey;
+    background-color: white;
     text-align: center;
     margin: 5px;
-    border-radius: 8px;
-    /* box-shadow: 5px 5px; */
+    border-radius: 3px;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.1);
 }
 
 .item-box {
@@ -24,6 +36,8 @@
 }
 
 .item-btn {
+    border-color: orange;
+    background-color: orange;
     margin-top: 10px;
     margin-bottom: 5px;
     width: 95%;
@@ -37,12 +51,10 @@
     display: block;
     font-size: 6vw;
     font-weight: bold;
-    margin-top: 10px;
 }
 
 .gridsubtitle {
     display: block;
-    margin-left: 15px;
     margin-bottom: 15px;
     font-size: 4vw;
 }
