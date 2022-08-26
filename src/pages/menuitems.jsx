@@ -1,7 +1,11 @@
 import { Col, Row } from 'react-grid-system';
 import React, { Component } from 'react';
-import { Button, Badge, Divider, Carousel } from 'antd';
-import './menuitems.css'
+import { Button, Badge, Divider } from 'antd';
+import { IoBagHandleOutline } from 'react-icons/io5'
+import { AiOutlineInfoCircle } from 'react-icons/ai'
+import { MdOutlineFavoriteBorder } from 'react-icons/md'
+import TopBanners from './topbanners';
+import './menuitems.scoped.css'
 
 class MenuItems extends Component {
     state = {
@@ -32,7 +36,7 @@ class MenuItems extends Component {
         titlesize: null
     }
     setcardsize(d) {
-        let cardheight = (d.getElementById('item-box').getBoundingClientRect().width + 5)
+        let cardheight = (d.getElementById('item-box').getBoundingClientRect().width - 50)
         this.setState({ cardheight })
     }
     componentDidMount() {
@@ -43,13 +47,8 @@ class MenuItems extends Component {
 
     render() {
         return (
-            <div style={{backgroundColor: 'rgb(238, 238, 238)'}}>
-                <Carousel className='carousel-bar' autoplay>
-                    <div><h3 className='carousel-item'>1</h3></div>
-                    <div><h3 className='carousel-item'>2</h3></div>
-                    <div><h3 className='carousel-item'>3</h3></div>
-                    <div><h3 className='carousel-item'>4</h3></div>
-                </Carousel>
+            <div style={{ backgroundColor: 'rgb(238, 238, 238)' }}>
+                <TopBanners />
                 <div className='gridbar'>
                     <span className='gridtitle'> Burger </span>
                     <Divider className='divider' type='horizontal'></Divider>
@@ -59,14 +58,24 @@ class MenuItems extends Component {
                     {
                         this.state.cards.map((i) => <Col key={i.id} xs={6} md={6} lg={3} xxl={2} style={{ padding: '0px' }}>
                             <div className="item-container">
-                                <Badge.Ribbon text="New" color="orange" style={{ paddingRight: '20px', display: i.id > 3 ? 'none' : 'block' }}>
+                                <Badge.Ribbon text="new !!" color="orange" style={{ paddingRight: '20px', display: i.id > 3 ? 'none' : 'block' }}>
                                     <div className="item-box" style={{ backgroundImage: `url(${i.image_url})`, height: `${this.state.cardheight}px` }} id="item-box"></div>
                                 </Badge.Ribbon>
                                 <div className='item-description'>
-                                    <div>Food</div>
-                                    <div>MYR 17.70</div>
+                                    <span className='item-description-title'>Food</span>
+                                    <span className='item-description-long'> Saucy Tasty food </span>
+                                    <div className='item-description-group'>
+                                        <span className='item-description-subtitle'>MYR 11.70</span>
+                                        <span className='item-description-group-icon'>
+                                            <MdOutlineFavoriteBorder className='item-description-info' style={{ marginRight: '10px' }} />
+                                            <AiOutlineInfoCircle className='item-description-info' />
+                                        </span>
+                                    </div>
                                 </div>
-                                <Button className='item-btn' type='primary' shape='round'>ADD +</Button>
+                                <Button className='item-btn' type='primary' shape='round'>
+                                    <span>ADD</span>
+                                    <IoBagHandleOutline className='item-icon' />
+                                </Button>
                             </div>
                         </Col>
                         )

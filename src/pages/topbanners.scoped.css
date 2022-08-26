@@ -1,0 +1,16 @@
+.calendar {
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+.carousel-bar {
+    margin: 20px;
+}
+
+.carousel-item {
+    height: 250px;
+    color: #fff;
+    line-height: 160px;
+    text-align: center;
+    background: rgb(255, 183, 50);
+}

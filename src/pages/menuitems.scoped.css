@@ -1,15 +1,3 @@
-.carousel-bar {
-    margin: 20px;
-}
-
-.carousel-item {
-    height: 250px;
-    color: #fff;
-    line-height: 160px;
-    text-align: center;
-    background: rgb(255, 183, 50);
-}
-
 .item-container {
     padding: 7px;
     background-color: white;
@@ -35,6 +23,46 @@
     word-wrap: break-word;
 }
 
+.item-description-group {
+    display: flex;
+}
+
+.item-description-group-icon {
+    margin-left: auto;
+    margin-right: 25px;
+}
+
+.item-description-title {
+    font-weight: 1000;
+    font-size: 20px;
+    display: block;
+    font-family: 'Raleway', sans-serif;
+}
+
+.item-description-long {
+    font-size: 13px;
+    display: block;
+    font-family: 'Raleway', sans-serif;
+}
+
+.item-description-subtitle {
+    font-weight: 600;
+    font-size: 15px;
+    font-family: 'Raleway', sans-serif;
+    color: rgb(255, 0, 106);
+}
+
+.item-description-info {
+    color: rgb(255, 0, 106);
+    font-size: 20px;
+}
+
+.item-icon {
+    font-size: 20px;
+    margin-bottom: -4.5px;
+    margin-left: 15px
+}
+
 .item-btn {
     border-color: orange;
     background-color: orange;
@@ -48,15 +76,18 @@
 }
 
 .gridtitle {
+    padding-top: 10px;
     display: block;
     font-size: 6vw;
     font-weight: bold;
+    font-family: 'Raleway', sans-serif;
 }
 
 .gridsubtitle {
     display: block;
     margin-bottom: 15px;
     font-size: 4vw;
+    font-family: 'Raleway', sans-serif;
 }
 
 .divider {
