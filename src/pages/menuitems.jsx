@@ -6,6 +6,7 @@ import { AiOutlineInfoCircle } from 'react-icons/ai'
 import { MdOutlineFavoriteBorder } from 'react-icons/md'
 import TopBanners from './topbanners';
 import CondimentModel from '../components/condimentmodal';
+import CheckoutButton from '../components/checkoutbutton';
 import './menuitems.scoped.css'
 
 class MenuItems extends Component {
@@ -34,7 +35,7 @@ class MenuItems extends Component {
             { id: 22, image_url: "https://img.freepik.com/premium-photo/big-hamburger-with-double-beef-french-fries_252907-8.jpg?w=2000" },
         ],
         cardheight: null,
-        condimentsModalVisibility: true,
+        condimentsModalVisibility: false,
     }
     setcardsize(d) {
         let cardheight = (d.getElementById('item-box').getBoundingClientRect().width - 50)
@@ -44,6 +45,10 @@ class MenuItems extends Component {
         console.log('mounted')
         window.addEventListener('load', () => this.setcardsize(document))
         window.addEventListener('resize', () => this.setcardsize(document))
+    }
+    triggerCondimentModal = () => {
+        let condimentsModalVisibility = !this.state.condimentsModalVisibility
+        this.setState({condimentsModalVisibility})
     }
 
     render() {
@@ -55,7 +60,7 @@ class MenuItems extends Component {
                     <Divider className='divider' type='horizontal'></Divider>
                     <span className='gridsubtitle'> Combo Pack </span>
                 </div>
-                <Row style={{ paddingLeft: '15px', paddingRight: '15px' }}>
+                <Row className='item-list-container'>
                     {
                         this.state.cards.map((i) => <Col key={i.id} xs={6} md={6} lg={3} xxl={2} style={{ padding: '0px' }}>
                             <div className="item-container">
@@ -73,7 +78,7 @@ class MenuItems extends Component {
                                         </span>
                                     </div>
                                 </div>
-                                <Button className='item-btn' type='primary' shape='round'>
+                                <Button onClick={() => this.triggerCondimentModal()} className='item-btn' type='primary' shape='round'>
                                     <span>ADD</span>
                                     <IoBagHandleOutline className='item-icon' />
                                 </Button>
@@ -82,7 +87,8 @@ class MenuItems extends Component {
                         )
                     }
                 </Row>
-                {/* <CondimentModel/> */}
+                <CondimentModel handleVisibility={this.triggerCondimentModal} visible={this.state.condimentsModalVisibility}/>
+                <CheckoutButton/>
             </div>
         );
     }
