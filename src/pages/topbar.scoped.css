@@ -34,7 +34,7 @@
 .top-bar-item {
     border-left: 1px solid rgb(213, 213, 213);
     padding-top: 15px;
-    padding-bottom: 15px;
+    padding-bottom: 5px;
     cursor: pointer;
 }
 
@@ -43,6 +43,11 @@
     font-family: 'Raleway', sans-serif;
 }
 
+.bottom-indicator {
+    margin: auto;
+    width: 80%;
+    border-bottom: 5px solid orange; 
+}
 
 .subtop-bar-scrollview {
     border: 1px solid rgb(213, 213, 213);
@@ -75,7 +80,11 @@
     transition: border-width 0.1s;
 }
 
-.item-container:hover{
+.top-bar-item:hover .item-container{
+    border: 3px solid orange;
+}
+
+.subtop-bar-item:hover .item-container{
     border: 3px solid orange;
 }
 

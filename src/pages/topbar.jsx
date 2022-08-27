@@ -6,8 +6,7 @@ import Search from 'antd/lib/input/Search';
 
 class TopBar extends Component {
     state = {
-        screen_height: null,
-        screen_width: null,
+        top_text_height: 'auto',
         scroll_position: 0,
         big_image_size: {
             height: 80,
@@ -29,16 +28,16 @@ class TopBar extends Component {
             { id: 9, name: 'Beverages' },
             { id: 10, name: 'Meatless series' },
         ],
-        selected_category: null
+        selected_category: null,
+        selected_sub_category: null
     }
 
+    // userinterface script
     selectCategory(category_id) {
         this.setState({ selected_category: category_id })
     }
-    rerenderUI() {
-        let screen_height = window.innerHeight
-        let screen_width = window.innerWidth
-        this.setState({ screen_height, screen_width })
+    selectSubCategory(subcategory_id) {
+        this.setState({ selected_sub_category: subcategory_id })
     }
     minimizetopbar() {
         let scroll_position = window.scrollY
@@ -62,10 +61,17 @@ class TopBar extends Component {
         }
         this.setState({big_image_size,small_image_size,scroll_position})
     }
+    settopbaritemtextheight(doc) {
+        let heighest_height_amongall = [...doc.querySelectorAll('.top-bar-scrollview .top-bar-item-content')].sort((a,b) => b.clientHeight - a.clientHeight)[0].clientHeight + 'px'
+        if (window.innerWidth > 350 && window.innerWidth < 400) {
+            heighest_height_amongall = 'auto'
+        }
+        this.setState({top_text_height: heighest_height_amongall})
+    }
     componentDidMount() {
-        window.addEventListener('load', () => this.rerenderUI())
-        window.addEventListener('resize', () => this.rerenderUI())
-        window.addEventListener('scroll', (e) => this.minimizetopbar(e))
+        window.addEventListener('load', () => this.settopbaritemtextheight(document))
+        window.addEventListener('resize', () => this.settopbaritemtextheight(document))
+        window.addEventListener('scroll', (event) => this.minimizetopbar(event))
     }
     render() {
         return (
@@ -78,23 +84,25 @@ class TopBar extends Component {
                             <div className='upper-bar-item'>PACOM RESTAURANT</div>
                             </Col>
                             <Col>
-                            <Search className='search-bar' placeholder='Search' enterButton color='#FF4500'></Search>
+                            <Search type='primary' className='search-bar' placeholder='Search' enterButton color='#FF4500'></Search>
                             </Col>
                         </Row>
                     </div>
                     <Row className='top-bar-scrollview' wrap="nowrap" style={{ backgroundColor: 'white' }}>
                         {this.state.categories.map((i) =>
-                            <Col onClick={() => this.selectCategory('asd')} className='top-bar-item' key={i.id} xs={4} md={3} xl={2}>
+                            <Col onClick={() => this.selectCategory(i.id)} onMouseOver={() => this.selectCategory(i.id)} className='top-bar-item' key={i.id} xs={4} md={3} xl={2}>
                                 <div className='item-container' style={{backgroundImage: 'url(https://www.wapititravel.com/blog/wp-content/uploads/2020/01/sukiyaka_healthy_japan_food.jpg)', height: `${this.state.big_image_size.height}px`, width: `${this.state.big_image_size.width}px`}}></div>
-                                <div className='top-bar-item-content'>{i.name}</div>
+                                <div className='top-bar-item-content' style={{height: `${this.state.top_text_height}`}}>{i.name}</div>
+                                <div className="bottom-indicator" style={{display: i.id === this.state.selected_category? 'block':'none'}}></div>
                             </Col>
                         )}
                     </Row>
                     <Row className='subtop-bar-scrollview' wrap="nowrap" style={{ backgroundColor: 'white', display: this.state.selected_category ? 'flex' : 'none' }}>
                         {this.state.categories.map((i) =>
-                            <Col className='subtop-bar-item' key={i.id} xs={3} md={2} xl={1}>
+                            <Col onClick={() => this.selectSubCategory(i.id)} onMouseOver={() => this.selectSubCategory(i.id)} className='subtop-bar-item' key={i.id} xs={3} md={2} xl={1}>
                                 <div className='item-container item-small' style={{backgroundImage: 'url(https://www.wapititravel.com/blog/wp-content/uploads/2020/01/sukiyaka_healthy_japan_food.jpg)', height: `${this.state.small_image_size.height}px`, width: `${this.state.small_image_size.width}px` }}/>
                                 <div className='subtop-bar-item-content'>{i.name}</div>
+                                <div className="bottom-indicator" style={{display: i.id === this.state.selected_sub_category? 'block':'none'}}></div>
                             </Col>
                         )}
                     </Row>

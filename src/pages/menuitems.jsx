@@ -5,6 +5,7 @@ import { IoBagHandleOutline } from 'react-icons/io5'
 import { AiOutlineInfoCircle } from 'react-icons/ai'
 import { MdOutlineFavoriteBorder } from 'react-icons/md'
 import TopBanners from './topbanners';
+import CondimentModel from '../components/condimentmodal';
 import './menuitems.scoped.css'
 
 class MenuItems extends Component {
@@ -33,7 +34,7 @@ class MenuItems extends Component {
             { id: 22, image_url: "https://img.freepik.com/premium-photo/big-hamburger-with-double-beef-french-fries_252907-8.jpg?w=2000" },
         ],
         cardheight: null,
-        titlesize: null
+        condimentsModalVisibility: true,
     }
     setcardsize(d) {
         let cardheight = (d.getElementById('item-box').getBoundingClientRect().width - 50)
@@ -81,6 +82,7 @@ class MenuItems extends Component {
                         )
                     }
                 </Row>
+                {/* <CondimentModel/> */}
             </div>
         );
     }
