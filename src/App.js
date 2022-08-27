@@ -11,9 +11,9 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/dashboard" element={ <Home />}>
-          <Route path="hello" element={<Counters />} />
-        </Route>
         <Route path="menu-items" element={<MenuItems />} />
+        <Route path="hello" element={<Counters />} />
+        </Route>
         <Route path="*" element={<Error404 />} />
       </Routes>
     </BrowserRouter>

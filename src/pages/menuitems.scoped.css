@@ -1,0 +1,120 @@
+.item-list-container {
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 150px;
+}
+
+.item-container {
+    padding: 7px;
+    background-color: white;
+    text-align: center;
+    margin: 5px;
+    border-radius: 3px;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.1);
+}
+
+.item-box {
+    height: 350px;
+    padding: 10px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position-x: center;
+    background-position-y: center;
+}
+
+.item-description {
+    padding-top: 10px;
+    padding-left: 20px;
+    text-align: left;
+    word-wrap: break-word;
+}
+
+.item-description-group {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.item-description-group-icon {
+    margin-left: auto;
+    margin-right: 25px;
+}
+
+.item-description-title {
+    font-weight: 1000;
+    font-size: 20px;
+    display: block;
+}
+
+.item-description-long {
+    font-size: 13px;
+    display: block;
+}
+
+.item-description-subtitle {
+    font-weight: 600;
+    font-size: 15px;
+    color: rgb(255, 0, 106);
+}
+
+.item-description-info {
+    color: rgb(255, 0, 106);
+    font-size: 20px;
+}
+
+.item-icon {
+    font-size: 20px;
+    margin-bottom: -4.5px;
+    margin-left: 15px
+}
+
+.item-btn {
+    border-color: orange;
+    background-color: orange;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    width: 95%;
+}
+
+.gridbar {
+    padding-left: 25px;
+}
+
+.gridtitle {
+    padding-top: 10px;
+    display: block;
+    font-size: 6vw;
+    font-weight: bold;
+}
+
+.gridsubtitle {
+    display: block;
+    margin-bottom: 15px;
+    font-size: 4vw;
+}
+
+.divider {
+    margin-top: 10x;
+    margin-bottom: 15px;
+}
+
+@media screen and (min-width: 750px) {
+    .gridtitle {
+        font-size: 3vw;
+    }
+
+    .gridsubtitle {
+        font-size: 2vw;
+    }
+
+    @media screen and (min-width: 1450px) {
+        .gridtitle {
+            font-size: 2vw;
+        }
+    
+        .gridsubtitle {
+            font-size: 1vw;
+        }
+    }
+}
