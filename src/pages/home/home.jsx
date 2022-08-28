@@ -2,13 +2,13 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import TopBar from '../../components/topbar/topbar';
 import SideBar from '../../components/sidebar/sidebar';
-import Footer from '../footer/footer';
+import Footer from '../../components/footer/footer';
 import './home.scoped.css'
 
 const Home = () => {
     return (
         <React.Fragment>
-            <SideBar />
+          <SideBar />
             <div className='layout-content'>
                 <TopBar />
                 <Outlet />

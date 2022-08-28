@@ -26,7 +26,7 @@ class SideBar extends Component {
                     </a>
                 </li>
                 <li>
-                    <a href="https://pacomsolution.com" target="_blank">
+                    <a href="https://pacomsolution.com" target="_blank" rel="noopener noreferrer">
                         <span className='powered-title text-style'> Powered by @pacomsolution.com </span>
                     </a>
                 </li>

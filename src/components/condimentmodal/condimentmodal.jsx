@@ -1,15 +1,13 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './condimentmodal.scoped.css'
 import { Modal, Collapse, Button, Checkbox, Input } from 'antd';
 import { IoIosAddCircleOutline } from 'react-icons/io'
 const { Panel } = Collapse;
 const { TextArea } = Input;
 
-class CondimentModel extends Component {
-    state = {}
-    render() {
+function CondimentModal(props) {
         return (
-            <Modal className='condiment-modal' title='Burger Pack' onCancel={this.props.handleVisibility} visible={this.props.visible} style={{ bottom: 10 }} bodyStyle={{ overflowY: 'scroll' }} footer={null}>
+            <Modal className='condiment-modal' title='Burger Pack' onCancel={() => props.handleVisibility(false)} visible={props.visible} style={{ bottom: 10 }} bodyStyle={{ overflowY: 'scroll' }} footer={null}>
                 <Collapse defaultActiveKey={[1, 2, 3]} expandIconPosition='end'>
                     <Panel header="Select Add-ons" key="1">
                         <li>
@@ -41,7 +39,7 @@ class CondimentModel extends Component {
                         <TextArea placeholder='Your order requirement here' rows={5}/>
                     </Panel>
                 </Collapse>
-                <Button onClick={this.props.handleVisibility} type='primary' className='add-to-cart-btn'>
+                <Button onClick={() => props.handleVisibility(false)} type='primary' className='add-to-cart-btn'>
                     <div className='btn-item'>
                         <span>ADD</span>
                         <IoIosAddCircleOutline className='btn-icon' />
@@ -49,7 +47,6 @@ class CondimentModel extends Component {
                 </Button>
             </Modal>
         );
-    }
 }
 
-export default CondimentModel;
+export default CondimentModal;

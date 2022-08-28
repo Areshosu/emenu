@@ -1,13 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './footer.scoped.css'
 
-class Footer extends Component {
-    state = {  } 
-    render() { 
+function Footer() {
         return (
             <p>Powered by @pacomsolution | Follow pacomsolution on twitter</p>
         );
-    }
 }
  
 export default Footer;
