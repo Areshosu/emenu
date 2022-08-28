@@ -7,6 +7,7 @@ import Search from 'antd/lib/input/Search';
 class TopBar extends Component {
     state = {
         top_text_height: 'auto',
+        subtop_text_height: 'auto',
         scroll_position: 0,
         big_image_size: {
             height: 80,
@@ -62,11 +63,18 @@ class TopBar extends Component {
         this.setState({big_image_size,small_image_size,scroll_position})
     }
     settopbaritemtextheight(doc) {
-        let heighest_height_amongall = [...doc.querySelectorAll('.top-bar-scrollview .top-bar-item-content')].sort((a,b) => b.clientHeight - a.clientHeight)[0].clientHeight + 'px'
+        let heighest_topbaritem_height_amongall = [...doc.querySelectorAll('.top-bar-scrollview .top-bar-item-content')].sort((a,b) => b.clientHeight - a.clientHeight)[0].clientHeight + 'px'
+        let heighest_subtopbaritem_height_amongall = [...doc.querySelectorAll('.subtop-bar-scrollview .subtop-bar-item-content')].sort((a,b) => b.clientHeight - a.clientHeight)[0].clientHeight + 'px'
         if (window.innerWidth > 350 && window.innerWidth < 400) {
-            heighest_height_amongall = 'auto'
+            heighest_topbaritem_height_amongall = 'auto'
+            heighest_subtopbaritem_height_amongall = 'auto'
         }
-        this.setState({top_text_height: heighest_height_amongall})
+        this.setState({top_text_height: heighest_topbaritem_height_amongall})
+
+        // only change height when its not hidden
+        if (heighest_subtopbaritem_height_amongall > 0) {
+            this.setState({subtop_text_height: heighest_subtopbaritem_height_amongall})
+        }
     }
     componentDidMount() {
         window.addEventListener('load', () => this.settopbaritemtextheight(document))
@@ -101,7 +109,7 @@ class TopBar extends Component {
                         {this.state.categories.map((i) =>
                             <Col onClick={() => this.selectSubCategory(i.id)} onMouseOver={() => this.selectSubCategory(i.id)} className='subtop-bar-item' key={i.id} xs={3} md={2} xl={1}>
                                 <div className='item-container item-small' style={{backgroundImage: 'url(https://www.wapititravel.com/blog/wp-content/uploads/2020/01/sukiyaka_healthy_japan_food.jpg)', height: `${this.state.small_image_size.height}px`, width: `${this.state.small_image_size.width}px` }}/>
-                                <div className='subtop-bar-item-content'>{i.name}</div>
+                                <div className='subtop-bar-item-content' style={{height: `${this.state.subtop_text_height}`}}>{i.name}</div>
                                 <div className="bottom-indicator" style={{display: i.id === this.state.selected_sub_category? 'block':'none'}}></div>
                             </Col>
                         )}

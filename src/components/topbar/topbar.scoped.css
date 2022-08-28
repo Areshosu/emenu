@@ -7,6 +7,8 @@
     font-size: larger;
     text-align: left;
     font-weight: bolder;
+    cursor: pointer;
+    user-select: none;
 }
 
 .search-bar {
@@ -38,6 +40,7 @@
     padding-top: 15px;
     padding-bottom: 5px;
     cursor: pointer;
+    user-select: none;
 }
 
 .top-bar-item-content {
@@ -59,10 +62,10 @@
 
 .subtop-bar-item {
     border-left: 1px solid rgb(213, 213, 213);
-    border-left: 1px solid rgb(213, 213, 213);
     padding-top: 5px;
     padding-bottom: 5px;
     cursor: pointer;
+    user-select: none;
 }
 
 .subtop-bar-item-content {

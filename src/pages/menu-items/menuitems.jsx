@@ -4,9 +4,9 @@ import { Button, Badge, Divider } from 'antd';
 import { IoBagHandleOutline } from 'react-icons/io5'
 import { AiOutlineInfoCircle } from 'react-icons/ai'
 import { MdOutlineFavoriteBorder } from 'react-icons/md'
-import TopBanners from './topbanners';
-import CondimentModel from '../components/condimentmodal';
-import CheckoutButton from '../components/checkoutbutton';
+import TopBanners from '../../components/topbanners/topbanners';
+import CondimentModel from '../../components/condimentmodal/condimentmodal';
+import CheckoutButton from '../../components/checkoutbutton/checkoutbutton';
 import './menuitems.scoped.css'
 
 class MenuItems extends Component {
