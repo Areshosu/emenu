@@ -1,6 +1,6 @@
 import { Col, Row } from 'react-grid-system';
 import React, { Component } from 'react';
-import { Button, Badge, Divider } from 'antd';
+import { Button, Badge, Divider, Skeleton } from 'antd';
 import { IoBagHandleOutline } from 'react-icons/io5'
 import { AiOutlineInfoCircle } from 'react-icons/ai'
 import { MdOutlineFavoriteBorder } from 'react-icons/md'
@@ -34,19 +34,27 @@ class MenuItems extends Component {
             { id: 19, image_url: "https://img.freepik.com/premium-photo/big-hamburger-with-double-beef-french-fries_252907-8.jpg?w=2000" },
             { id: 20, image_url: "https://img.freepik.com/premium-photo/big-hamburger-with-double-beef-french-fries_252907-8.jpg?w=2000" },
             { id: 21, image_url: "https://img.freepik.com/premium-photo/big-hamburger-with-double-beef-french-fries_252907-8.jpg?w=2000" },
-            { id: 22, image_url: "https://img.freepik.com/premium-photo/big-hamburger-with-double-beef-french-fries_252907-8.jpg?w=2000" },
+            { id: 22, image_url: "" },
         ],
+        cards_status : [],
         condimentsModalVisibility: false
     }
 
     componentDidMount() {
 
     }
-    
+
     triggerCondimentModal = (update) => {
         let condimentsModalVisibility = update
-        this.setState({condimentsModalVisibility})
+        this.setState({ condimentsModalVisibility })
     }
+    checkImageLoadingStatus = (key) => {
+        return !!this.state.cards_status[key]
+    }
+    updateImageLoadingStatus = (key) => {
+        let cards_status = [...this.state.cards,this.state.cards.find((c) => c.id === key)]
+        this.setState({cards_status})
+    } 
 
     render() {
         return (
@@ -62,7 +70,8 @@ class MenuItems extends Component {
                         this.state.cards.map((i) => <Col key={i.id} xs={6} md={6} lg={3} xxl={2} style={{ padding: '0px' }}>
                             <div className="item-container">
                                 <Badge.Ribbon text="new !!" color="orange" style={{ paddingRight: '20px', display: i.id > 3 ? 'none' : 'block' }}>
-                                    <img src={`${i.image_url}`} className="item-box" id="item-box" alt='menu-item.png'/>
+                                    <Skeleton.Image active={true} style={{display: this.checkImageLoadingStatus(i.id)? 'none':'block'}}></Skeleton.Image>
+                                    <img onLoad={() => this.updateImageLoadingStatus(i.id,true)} src={`${i.image_url}`} className="item-box" id="item-box" alt='' />
                                 </Badge.Ribbon>
                                 <div className='item-description'>
                                     <span className='item-description-title'>Food</span>
@@ -84,8 +93,8 @@ class MenuItems extends Component {
                         )
                     }
                 </Row>
-                <CondimentModal handleVisibility={this.triggerCondimentModal} visible={this.state.condimentsModalVisibility}/>
-                <CheckoutButton/>
+                <CondimentModal handleVisibility={this.triggerCondimentModal} visible={this.state.condimentsModalVisibility} />
+                <CheckoutButton />
             </div>
         );
     }
