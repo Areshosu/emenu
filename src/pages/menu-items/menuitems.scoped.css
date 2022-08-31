@@ -7,16 +7,20 @@
 }
 
 .item-container {
+    display: flex;
+    flex-direction: column;
+    height: calc(100% - 10px);
     padding: 7px;
     background-color: white;
     text-align: center;
-    margin: 5px;
+    margin: 5px !important;
     border-radius: 3px;
     box-shadow: 0 3px 10px rgb(0 0 0 / 0.1);
 }
 
 .item-box {
-    height: 350px;
+    max-width: 100%;
+    object-fit: contain;
     padding: 10px;
     background-size: contain;
     background-repeat: no-repeat;
@@ -72,7 +76,7 @@
 .item-btn {
     border-color: orange;
     background-color: orange;
-    margin-top: 10px;
+    margin: auto;
     margin-bottom: 5px;
     width: 95%;
 }

@@ -17,25 +17,9 @@
     display: block;
 }
 
-@media screen and (max-width: 600px) {
-    .search-bar {
-        width: 100%;
-    }
-
-    .upper-bar-item {
-        margin-left: 0px;
-        text-align: center;
-    }
-}
-
-.top-bar-scrollview {
-    margin-left: 0px !important;
-    margin-right: 0px !important;
-    border: 1px solid rgb(213, 213, 213);
-    overflow-x: scroll;
-}
-
 .top-bar-item {
+    display: flex;
+    flex-direction: column;
     border-left: 1px solid rgb(213, 213, 213);
     padding-top: 15px;
     padding-bottom: 5px;
@@ -45,56 +29,60 @@
 
 .top-bar-item-content {
     text-align: center;
+    word-wrap: break-word;
 }
 
 .bottom-indicator {
-    margin: auto;
+    margin: auto auto 0 auto;
     width: 80%;
     border-bottom: 5px solid orange; 
 }
 
-.subtop-bar-scrollview {
+.primary-bar {
     margin-left: 0px !important;
     margin-right: 0px !important;
     border: 1px solid rgb(213, 213, 213);
     overflow-x: scroll;
 }
 
-.subtop-bar-item {
-    border-left: 1px solid rgb(213, 213, 213);
-    padding-top: 5px;
-    padding-bottom: 5px;
-    cursor: pointer;
-    user-select: none;
-}
-
-.subtop-bar-item-content {
-    text-align: center;
+.hidebar {
+    display: none !important;
 }
 
 .item-container {
-    background-color: rgb(239, 239, 239);
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position-x: center;
-    background-position-y: center;
     height: 80px;
     width: 85px;
     border-radius: 50px;
-    margin: auto;
-    transition: height 0.2s, width 0.2s, border-width 0.1s;
+    margin: 0 auto 0 auto;
+    overflow: hidden;
 }
 
-.top-bar-item:hover .item-container{
-    border: 3px solid orange;
+.item-img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
 }
 
-.subtop-bar-item:hover .item-container{
+.bar-item-hover:hover {
     border: 3px solid orange;
 }
 
 .item-small {
     height: 65px;
     width: 65px;
-    transition: height 0.6s, width 0.6s;
+}
+
+.small-font {
+    font-size: smaller;
+}
+
+@media screen and (max-width: 600px) {
+    .search-bar {
+        width: 100%;
+    }
+
+    .upper-bar-item {
+        margin-left: 0px;
+        text-align: center;
+    }
 }
