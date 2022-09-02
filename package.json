@@ -12,6 +12,7 @@
     "antd": "^4.22.2",
     "craco-less": "^2.0.0",
     "craco-plugin-scoped-css": "^1.1.1",
+    "dotenv": "^16.0.2",
     "jquery": "^3.6.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

@@ -3,12 +3,13 @@ import React, { Component } from 'react';
 import { Button, Badge, Divider, Skeleton } from 'antd';
 import { IoBagHandleOutline } from 'react-icons/io5'
 import { AiOutlineInfoCircle } from 'react-icons/ai'
-import { MdOutlineFavoriteBorder } from 'react-icons/md'
+import { MdOutlineFavoriteBorder, MdFavorite } from 'react-icons/md'
 import TopBanners from '../../components/topbanners/topbanners';
 import CondimentModal from '../../components/condimentmodal/condimentmodal';
 import CheckoutButton from '../../components/checkoutbutton/checkoutbutton';
 import './menuitems.js';
 import './menuitems.scoped.css'
+import MenuItemsService from '../../services/public/menuitemservice';
 
 class MenuItems extends Component {
 
@@ -36,63 +37,83 @@ class MenuItems extends Component {
             { id: 21, image_url: "https://img.freepik.com/premium-photo/big-hamburger-with-double-beef-french-fries_252907-8.jpg?w=2000" },
             { id: 22, image_url: "" },
         ],
-        cards_status : [],
+        card_favorite: [],
         condimentsModalVisibility: false
     }
 
     componentDidMount() {
-
+        const menuitemservice = new MenuItemsService()
+        menuitemservice.index(16).then((response) => {
+            let cards = response.data
+            console.log(cards)
+            this.setState({ cards })
+        })
     }
 
     triggerCondimentModal = (update) => {
         let condimentsModalVisibility = update
         this.setState({ condimentsModalVisibility })
     }
-    checkImageLoadingStatus = (key) => {
-        return !!this.state.cards_status[key]
+    updateFavorite = (item,update) => {
+        let current_card_favorite = this.state.card_favorite
+        let card_favorite = []
+        if (update) {
+            card_favorite = [...current_card_favorite,item]
+        console.log(card_favorite)
+        } else {
+            card_favorite = current_card_favorite.filter((c) => c.id !== item.id)
+        }
+        this.setState({ card_favorite })
     }
-    updateImageLoadingStatus = (key) => {
-        let cards_status = [...this.state.cards,this.state.cards.find((c) => c.id === key)]
-        this.setState({cards_status})
-    } 
 
     render() {
         return (
             <div style={{ backgroundColor: 'rgb(238, 238, 238)' }}>
                 <TopBanners />
-                <div className='gridbar'>
-                    <span className='gridtitle'> Burger </span>
-                    <Divider className='divider' type='horizontal'></Divider>
-                    <span className='gridsubtitle'> Combo Pack </span>
-                </div>
-                <Row className='item-list-container'>
-                    {
-                        this.state.cards.map((i) => <Col key={i.id} xs={6} md={6} lg={3} xxl={2} style={{ padding: '0px' }}>
-                            <div className="item-container">
-                                <Badge.Ribbon text="new !!" color="orange" style={{ paddingRight: '20px', display: i.id > 3 ? 'none' : 'block' }}>
-                                    <Skeleton.Image active={true} style={{display: this.checkImageLoadingStatus(i.id)? 'none':'block'}}></Skeleton.Image>
-                                    <img onLoad={() => this.updateImageLoadingStatus(i.id,true)} src={`${i.image_url}`} className="item-box" id="item-box" alt='' />
-                                </Badge.Ribbon>
-                                <div className='item-description'>
-                                    <span className='item-description-title'>Food</span>
-                                    <span className='item-description-long'> Saucy Tasty food </span>
-                                    <div className='item-description-group'>
-                                        <span className='item-description-subtitle'>MYR 11.70</span>
-                                        <span className='item-description-group-icon'>
-                                            <MdOutlineFavoriteBorder className='item-description-info' style={{ marginRight: '10px' }} />
-                                            <AiOutlineInfoCircle className='item-description-info' />
-                                        </span>
-                                    </div>
-                                </div>
-                                <Button onClick={() => this.triggerCondimentModal(true)} className='item-btn' type='primary'>
-                                    <span>ADD</span>
-                                    <IoBagHandleOutline className='item-icon' />
-                                </Button>
+                {
+                    this.state.cards.map((c) => <React.Fragment key={`cc-${c.id}`}>
+                        <div className='gridbar'>
+                            <span className='gridtitle'> {c.description} </span>
+                            <Divider className='divider' type='horizontal'></Divider>
+                        </div>
+                        {
+                            c.menu_brands && c.menu_brands.map((b) => <React.Fragment key={`bb-${b.id}`}>
+                            <div className="gridbar">
+                                <span className='gridsubtitle'> {b.description} </span>
                             </div>
-                        </Col>
+                            <Row className='item-list-container'>
+                                {
+                                    b.menu_item.length > 0? b.menu_item.map((i) => <Col key={i.id} xs={6} md={6} lg={3} xxl={2} style={{ padding: '0px' }}>
+                                        <div className="item-container">
+                                            <Badge.Ribbon text="new !!" color="orange" style={{ paddingRight: '20px', display: i.id > 3 ? 'none' : 'block' }}>
+                                                {/* <Skeleton.Image active={true} style={{display: this.checkImageLoadingStatus(i.id)? 'none':'block'}}></Skeleton.Image> */}
+                                                <img src="https://img.freepik.com/premium-photo/big-hamburger-with-double-beef-french-fries_252907-8.jpg?w=2000" className="item-box" id="item-box" alt='' />
+                                            </Badge.Ribbon>
+                                            <div className='item-description'>
+                                                <span className='item-description-title'>{i.name1}</span>
+                                                <span className='item-description-long'> {i.description} </span>
+                                                <div className='item-description-group'>
+                                                    <span className='item-description-subtitle'>MYR {i.price1}</span>
+                                                    <span className='item-description-group-icon'>
+                                                        { this.state.card_favorite.find((c) => c.id === i.id)? <MdFavorite onClick={() => this.updateFavorite(i,false)} className='item-description-info' style={{ marginRight: '10px' }} /> : <MdOutlineFavoriteBorder onClick={() => this.updateFavorite(i,true)} className='item-description-info' style={{ marginRight: '10px' }} /> }
+                                                        <AiOutlineInfoCircle className='item-description-info' />
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <Button onClick={() => this.triggerCondimentModal(true)} className='item-btn' type='primary'>
+                                                <span>ADD</span>
+                                                <IoBagHandleOutline className='item-icon' />
+                                            </Button>
+                                        </div>
+                                    </Col>
+                                    ) : <span> No item to show </span>
+                                }
+                            </Row>
+                        </React.Fragment>
                         )
-                    }
-                </Row>
+                        }
+                    </React.Fragment>)
+                }
                 <CondimentModal handleVisibility={this.triggerCondimentModal} visible={this.state.condimentsModalVisibility} />
                 <CheckoutButton />
             </div>
