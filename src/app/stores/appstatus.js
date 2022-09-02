@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 export const appstat = createSlice({
     name: 'appstat',
     initialState: {
-        isLoading: true
+        isLoading: false
     },
     reducers: {
         updateLoadingStatus: (state, action) => {

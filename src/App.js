@@ -3,7 +3,7 @@ import Error404 from './pages/404';
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import React from 'react';
 import Home from './pages/home/home';
-import MenuItems from './pages/menu-items/menuitems';
+import MenuItems from './pages/menu-items/menuitems.jsx';
 import Checkout from './pages/checkout/checkout';
 import Loading from './pages/loading/loading';
 
