@@ -25,7 +25,7 @@ class MenuItems extends Component {
 
     componentDidMount() {
         const menuitemservice = new MenuItemsService()
-        menuitemservice.index(30).then((response) => {
+        menuitemservice.index(16).then((response) => {
             let cards = response.data
             this.props.updateMenuCategory(cards)
             this.props.updateSelectedCategory(cards[0].id)

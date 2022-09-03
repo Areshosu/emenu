@@ -3,7 +3,7 @@ import './footer.scoped.css'
 
 function Footer() {
         return (
-            <p>Powered by @pacomsolution | Follow pacomsolution on twitter</p>
+            <p className='footer'>Powered by @pacomsolution | Follow pacomsolution on twitter</p>
         );
 }
  
