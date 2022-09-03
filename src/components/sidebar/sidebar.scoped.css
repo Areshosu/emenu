@@ -27,7 +27,7 @@ li {
 }
 
 .avatar-view:hover {
-    border: solid 1px orange;
+    border: solid 1px var(--custom-primary-color);
 }
 
 .text-style {

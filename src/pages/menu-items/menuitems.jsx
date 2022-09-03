@@ -75,7 +75,7 @@ class MenuItems extends Component {
                                             {
                                                 b.menu_item.map((i) => <Col key={i.id} xs={6} md={6} lg={3} xxl={2} style={{ padding: '0px' }}>
                                                     <div className="item-container">
-                                                        <Badge.Ribbon text="new !!" color="orange" style={{ paddingRight: '20px', display: i.id > 3 ? 'none' : 'block' }}>
+                                                        <Badge.Ribbon text="new !!" style={{ paddingRight: '20px', display: 'none' }}>
                                                             {/* <Skeleton.Image active={true} style={{display: this.checkImageLoadingStatus(i.id)? 'none':'block'}}></Skeleton.Image> */}
                                                             <img src="https://img.freepik.com/premium-photo/big-hamburger-with-double-beef-french-fries_252907-8.jpg?w=2000" className="item-box" id="item-box" alt='' />
                                                         </Badge.Ribbon>
@@ -90,7 +90,7 @@ class MenuItems extends Component {
                                                                 </span>
                                                             </div>
                                                         </div>
-                                                        <Button onClick={() => this.triggerCondimentModal(b.condiment_item_menu_brand,true)} className='item-btn' type='primary'>
+                                                        <Button onClick={() => this.triggerCondimentModal(b.condiment_item_menu_brand,true)} className='item-btn' type="primary">
                                                             <span>ADD</span>
                                                             <IoBagHandleOutline className='item-icon' />
                                                         </Button>

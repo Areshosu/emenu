@@ -3,9 +3,10 @@ import { Row, Col } from 'react-grid-system';
 import { Affix } from 'antd';
 import './topbar.js';
 import './topbar.scoped.css';
-import Search from 'antd/lib/input/Search';
+import { Input } from 'antd'
 import { updateSelectedCategory, updateSelectedSubCategory } from '../../app/stores/menu.js';
 import { connect } from 'react-redux/es/exports.js';
+const { Search } = Input;
 
 class TopBar extends Component {
     state = {
@@ -39,14 +40,14 @@ class TopBar extends Component {
         return (
             <Affix>
                 <div className='top-bar'>
-                    <div className='top-bar-item-content' style={{ backgroundColor: 'orange' }}>TABLE 29</div>
-                    <div style={{ padding: '10px', display: 'flex', backgroundColor: 'white' }}>
+                    <div className='top-bar-item-content top-bar-table'>TABLE 29</div>
+                    <div className='top-bar-wrapper'>
                         <Row className='upper-bar'>
                             <Col xs={12} md={6}>
                                 <div className='upper-bar-item'>PACOM RESTAURANT</div>
                             </Col>
                             <Col>
-                                <Search type='primary' className='search-bar' placeholder='Search' enterButton color='#FF4500'></Search>
+                                <Search className='search-bar' placeholder='Search' enterButton color='#FF4500'></Search>
                             </Col>
                         </Row>
                     </div>

@@ -28,7 +28,7 @@
 }
 
 .top-bar-item:hover .bar-item-hover {
-    border: 3px solid orange;
+    border: 3px solid var(--custom-primary-color);
 }
 
 .top-bar-item-content {
@@ -36,10 +36,21 @@
     word-wrap: break-word;
 }
 
+.top-bar-table {
+    background-color: var(--custom-primary-color);
+}
+
+.top-bar-wrapper {
+    background-color: white;
+    padding: 10px; 
+    display: flex; 
+    justify-content: center;
+}
+
 .bottom-indicator {
     margin: auto auto 0 auto;
     width: 80%;
-    border-bottom: 5px solid orange; 
+    border-bottom: 5px solid var(--custom-primary-color);
 }
 
 .primary-bar {
