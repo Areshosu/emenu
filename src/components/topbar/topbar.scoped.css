@@ -62,6 +62,7 @@
 
 .hidebar .item-container {
     height: 0px;
+    width: 0px;
 }
 
 .item-container {
@@ -70,7 +71,7 @@
     border-radius: 50px;
     margin: 0 auto 0 auto;
     overflow: hidden;
-    transition: height 0.3s;
+    transition-duration: 0.3s;
     transition-delay: 0.3s;
 }
 

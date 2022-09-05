@@ -7,7 +7,10 @@ const { TextArea } = Input;
 
 function CondimentModal(props) {
     return (
-        <Modal className='condiment-modal' title='Burger Pack' onCancel={() => props.handleVisibility(props.condiments,false)} visible={props.visible} style={{ bottom: 10 }} bodyStyle={{ overflowY: 'scroll' }} footer={null}>
+        <Modal className='condiment-modal' title={props.current_item && props.current_item.description} onCancel={() => props.handleVisibility(false)} visible={props.visible} style={{ bottom: 10 }} bodyStyle={{ overflowY: 'scroll' }} footer={null}>
+            <div>
+                <img src="https://img.freepik.com/premium-photo/big-hamburger-with-double-beef-french-fries_252907-8.jpg?w=2000" className="item-box" id="item-box" alt='' />
+            </div>
             <Collapse defaultActiveKey={[1, 2, 3]} expandIconPosition='end'>
                 <Panel header="Select Add-ons" key="1">
                     <li>
@@ -36,7 +39,7 @@ function CondimentModal(props) {
                     <TextArea placeholder='Your order requirement here' rows={5} />
                 </Panel>
             </Collapse>
-            <Button onClick={() => props.handleVisibility(props.condiments,false)} type='primary' className='add-to-cart-btn'>
+            <Button onClick={() => props.handleVisibility(false)} type='primary' className='add-to-cart-btn'>
                 <div className='btn-item'>
                     <span>ADD</span>
                     <IoIosAddCircleOutline className='btn-icon' />

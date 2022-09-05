@@ -3,16 +3,18 @@ import { Row, Col } from 'react-grid-system';
 import { Affix } from 'antd';
 import './topbar.js';
 import './topbar.scoped.css';
-import { Input } from 'antd'
+import { Input, AutoComplete } from 'antd'
 import { updateSelectedCategory, updateSelectedSubCategory } from '../../app/stores/menu.js';
 import { connect } from 'react-redux/es/exports.js';
+import _ from 'lodash'
 const { Search } = Input;
 
 class TopBar extends Component {
     state = {
         categories: [],
         selected_category: null,
-        selected_sub_category: null
+        selected_sub_category: null,
+        search_autocomplete_option: []
     }
 
     // // userinterface script
@@ -36,6 +38,17 @@ class TopBar extends Component {
         let category = this.props.menuCategories.find((c) => c.id === this.state.selected_category)
         return category? category.subcategories : []
     }
+    handleSearchAutoComplete = (query) => {
+        let menubrand_item = this.props.menuItem
+        let list_of_menu_items = []
+        menubrand_item.forEach((c) => c.menu_brands.forEach((b,i) => Array.prototype.push.apply(list_of_menu_items,b.menu_item)))
+        let search_autocomplete_option = list_of_menu_items.filter((i) => i.description.toLowerCase().includes(query))
+        search_autocomplete_option = search_autocomplete_option.map((s) => ({label: s.description,value: s.description}))
+        this.setState({search_autocomplete_option})
+    }
+    handleSearchDialog = () => {
+        console.log('ouhh stinkyy!')
+    }
     render() {
         return (
             <Affix>
@@ -47,7 +60,9 @@ class TopBar extends Component {
                                 <div className='upper-bar-item'>PACOM RESTAURANT</div>
                             </Col>
                             <Col>
-                                <Search className='search-bar' placeholder='Search' enterButton color='#FF4500'></Search>
+                                <AutoComplete className='search-bar' onSearch={this.handleSearchAutoComplete} options={this.state.search_autocomplete_option} onSelect={this.handleSearchDialog}>
+                                <Search placeholder='Search' enterButton color='#FF4500'></Search>
+                                </AutoComplete>
                             </Col>
                         </Row>
                     </div>
@@ -79,7 +94,7 @@ class TopBar extends Component {
     }
 }
 
-const mapStateToProps = (state) => ({menuCategories: state.menu.menuCategory})
+const mapStateToProps = (state) => ({menuItem: state.menu.menuItem,menuCategories: state.menu.menuCategory})
 
 const mapDispatchToProps = {updateSelectedCategory,updateSelectedSubCategory}
 

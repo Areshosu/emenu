@@ -12,7 +12,7 @@ import './menuitems.scoped.css'
 import MenuItemsService from '../../services/public/menuitemservice';
 import { connect } from 'react-redux';
 import { updateLoadingStatus } from '../../app/stores/appstatus';
-import { updateMenuCategory, updateSelectedCategory } from '../../app/stores/menu';
+import { updateMenuCategory, updateSelectedCategory, updateMenuItem } from '../../app/stores/menu';
 
 class MenuItems extends Component {
 
@@ -20,6 +20,7 @@ class MenuItems extends Component {
         cards: [],
         card_favorite: [],
         condimentsModalVisibility: false,
+        current_item: null,
         card_condiments: []
     }
 
@@ -27,21 +28,23 @@ class MenuItems extends Component {
         const menuitemservice = new MenuItemsService()
         menuitemservice.index(16).then((response) => {
             let cards = response.data
+            this.props.updateMenuItem(cards)
             this.props.updateMenuCategory(cards)
             this.props.updateSelectedCategory(cards[0].id)
             this.setState({ cards })
             this.props.updateLoadingStatus(false)
-            console.log(cards)
         })
     }
     componentWillUnmount() {
         this.props.updateLoadingStatus(true)
     }
-
-    triggerCondimentModal = (condimentitems,update) => {
+    updateCondiment = (current_item,card_condiments) => {
+        this.setState({ current_item,card_condiments })
+        console.log(current_item)
+    }
+    triggerCondimentModal = (update) => {
         let condimentsModalVisibility = update
-        let card_condiments = condimentitems
-        this.setState({ condimentsModalVisibility, card_condiments})
+        this.setState({ condimentsModalVisibility })
     }
     updateFavorite = (item, update) => {
         let current_card_favorite = this.state.card_favorite
@@ -90,7 +93,7 @@ class MenuItems extends Component {
                                                                 </span>
                                                             </div>
                                                         </div>
-                                                        <Button onClick={() => this.triggerCondimentModal(b.condiment_item_menu_brand,true)} className='item-btn' type="primary">
+                                                        <Button onClick={() => {this.updateCondiment(i,b.condiment_item_menu_brand); this.triggerCondimentModal(true)}} className='item-btn' type="primary">
                                                             <span>ADD</span>
                                                             <IoBagHandleOutline className='item-icon' />
                                                         </Button>
@@ -106,7 +109,7 @@ class MenuItems extends Component {
                         }
                     </React.Fragment>)
                 }
-                <CondimentModal handleVisibility={this.triggerCondimentModal} visible={this.state.condimentsModalVisibility} condiments={this.state.card_condiments}/>
+                <CondimentModal handleVisibility={this.triggerCondimentModal} visible={this.state.condimentsModalVisibility} condiments={this.state.card_condiments} current_item={this.state.current_item}/>
                 <CheckoutButton />
             </div>
         );
@@ -115,6 +118,6 @@ class MenuItems extends Component {
 
 const mapStateToProps = (state) => ({ isLoading: state.appstat.isLoading, selected_category: state.menu.selectedCategory, selected_sub_category: state.menu.selectedSubCategory })
 
-const mapDispatchToProps = { updateLoadingStatus, updateMenuCategory, updateSelectedCategory }
+const mapDispatchToProps = { updateLoadingStatus, updateMenuCategory, updateSelectedCategory, updateMenuItem }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MenuItems);
