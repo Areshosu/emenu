@@ -3,11 +3,10 @@ import { createSlice } from "@reduxjs/toolkit";
 export const appstat = createSlice({
     name: 'appstat',
     initialState: {
-        isLoading: false
+        isLoading: true
     },
     reducers: {
         updateLoadingStatus: (state, action) => {
-            console.log(action)
             state.isLoading = action.payload
         }
     }

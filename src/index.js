@@ -1,18 +1,28 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import 'antd/dist/antd.min.css'
+import './assets/css/antd.custom.css'
 import reportWebVitals from './reportWebVitals';
 import App from './App.js'
 import store from './app/store'
 import { Provider } from 'react-redux';
+import { ConfigProvider } from 'antd';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <Provider store={store}>
-        <App />
-    </Provider>
+        <Provider store={store}>
+    <ConfigProvider prefixCls='custom'>
+            <App />
+            </ConfigProvider>
+        </Provider>
 );
+
+ConfigProvider.config({
+        prefixCls: 'custom',
+        theme: {
+            primaryColor: 'orange',
+          }
+    })
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

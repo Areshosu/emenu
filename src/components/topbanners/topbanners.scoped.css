@@ -12,5 +12,5 @@
     color: #fff;
     line-height: 160px;
     text-align: center;
-    background: rgb(255, 183, 50);
+    background: var(--custom-primary-color);
 }
