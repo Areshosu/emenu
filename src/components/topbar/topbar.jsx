@@ -6,7 +6,6 @@ import './topbar.scoped.css';
 import { Input, AutoComplete } from 'antd'
 import { updateSelectedCategory, updateSelectedSubCategory } from '../../app/stores/menu.js';
 import { connect } from 'react-redux/es/exports.js';
-import _ from 'lodash'
 const { Search } = Input;
 
 class TopBar extends Component {

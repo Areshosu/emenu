@@ -4,15 +4,15 @@ import { Button, Badge, Divider } from 'antd';
 import { IoBagHandleOutline } from 'react-icons/io5'
 import { AiOutlineInfoCircle } from 'react-icons/ai'
 import { MdOutlineFavoriteBorder, MdFavorite } from 'react-icons/md'
-import TopBanners from '../../components/topbanners/topbanners';
-import CondimentModal from '../../components/condimentmodal/condimentmodal';
-import CheckoutButton from '../../components/checkoutbutton/checkoutbutton';
+import TopBanners from '../../../components/topbanners/topbanners';
+import CondimentModal from '../../../components/condimentmodal/condimentmodal';
+import CheckoutButton from '../../../components/checkoutbutton/checkoutbutton';
 import './menuitems.js';
 import './menuitems.scoped.css'
-import MenuItemsService from '../../services/public/menuitemservice';
+import MenuItemsService from '../../../services/public/menuitemservice';
 import { connect } from 'react-redux';
-import { updateLoadingStatus } from '../../app/stores/appstatus';
-import { updateMenuCategory, updateSelectedCategory, updateMenuItem } from '../../app/stores/menu';
+import { updateLoadingStatus } from '../../../app/stores/appstatus';
+import { updateMenuCategory, updateSelectedCategory, updateMenuItem } from '../../../app/stores/menu';
 
 class MenuItems extends Component {
 

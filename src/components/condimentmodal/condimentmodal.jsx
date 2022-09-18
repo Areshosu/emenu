@@ -11,7 +11,7 @@ function CondimentModal(props) {
             <div>
                 <img src="https://img.freepik.com/premium-photo/big-hamburger-with-double-beef-french-fries_252907-8.jpg?w=2000" className="item-box" id="item-box" alt='' />
             </div>
-            <Collapse defaultActiveKey={[1, 2, 3]} expandIconPosition='end'>
+            <Collapse defaultActiveKey={[2, 3]} expandIconPosition='end'>
                 <Panel header="Select Add-ons" key="1">
                     <li>
                         {
