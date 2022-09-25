@@ -23,7 +23,7 @@ class Recommendation extends Component {
                                                 <div className='box-item-title'>Burger King</div>
                                                 <div>RM 7.00</div>
                                                 <div className='add-btn'>
-                                                    <Button shape='round' type='primary'>ADD</Button>
+                                                    <Button shape='round' type='primary'>ADD +</Button>
                                                 </div>
                                             </div>
                                         </div>

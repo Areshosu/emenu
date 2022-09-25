@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { updateLoadingStatus } from '../../../app/stores/appstatus';
+import { Link } from 'react-router-dom';
+import { IoIosArrowForward } from 'react-icons/io';
 import Recommendation from '../../../components/recommendation/recommendation';
 import OrderItems from '../../../components/order-items/order-items';
+import './checkout.scoped.css';
 
 class Checkout extends Component {
     state = {}
@@ -11,12 +14,24 @@ class Checkout extends Component {
             <React.Fragment>
                 <Recommendation />
                 <OrderItems />
-                <h1>Hello !</h1>
+                <div className='external-container'>
+                <div className='justify-space'>
+                    <span>TOTAL PAYMENT</span>
+                    <span>RM 38.90</span>
+                </div>
+                <div className='justify-center'>
+                <Link className='confirm-btn' to="/order/checkout">
+                    <span className='confirm-btn-title'>CONFIRM ORDER</span>
+                </Link>
+                </div>
+                </div>
             </React.Fragment>
         );
     }
     componentDidMount() {
-        this.props.updateLoadingStatus(false)
+        setTimeout(() => {
+            this.props.updateLoadingStatus(false)
+        }, 1500);
     }
 
     componentWillUnmount() {
