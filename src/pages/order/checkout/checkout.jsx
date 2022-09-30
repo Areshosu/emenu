@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { updateLoadingStatus } from '../../../app/stores/appstatus';
 import { Link } from 'react-router-dom';
-import { IoIosArrowForward } from 'react-icons/io';
 import Recommendation from '../../../components/recommendation/recommendation';
 import OrderItems from '../../../components/order-items/order-items';
 import './checkout.scoped.css';

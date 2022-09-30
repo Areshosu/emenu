@@ -7,20 +7,29 @@ import MenuItems from './pages/home/menu-items/menuitems.jsx';
 import Order from './pages/order/order';
 import Loading from './pages/loading/loading';
 import Checkout from './pages/order/checkout/checkout';
+import User from './pages/home/user/user';
+import Outlet from './pages/welcome/outlet/outlet';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Loading />}>
-          <Route path="outlet" element={<Home />}>
-            <Route path="menu-items" element={<MenuItems />} />
+          <Route path="outlet/:id">
+            <Route path="user" element={<User />}>
+              <Route path="menu" element={<Home />}>
+                <Route path="menu-items" element={<MenuItems />} />
+              </Route>
+              <Route path="order" element={<Order />}>
+                <Route path="checkout" element={<Checkout />} />
+              </Route>
+            </Route>
           </Route>
-          <Route path="order" element={<Order />}>
-            <Route path="checkout" element={<Checkout />} />
+          <Route path="welcome">
+            <Route path="outlet/:id" element={<Outlet />}/>
           </Route>
-          <Route path="*" element={<Error404 />} />
         </Route>
+        <Route path="*" element={<Error404 />} />
       </Routes>
     </BrowserRouter>
   );
