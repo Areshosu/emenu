@@ -4,6 +4,9 @@ import { GrCart } from 'react-icons/gr';
 
 class FlexTopBar extends Component {
     state = {}
+    componentDidMount = () => {
+        
+    }
     render() {
         return (
             <div className='flex-top-bar'>

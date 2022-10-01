@@ -17,6 +17,11 @@ import { updateMenuCategory, updateSelectedCategory, updateMenuItem } from '../.
 class MenuItems extends Component {
 
     state = {
+        outlet_id: null,
+        userData: {
+            email: '',
+            phone: ''
+        },
         cards: [],
         card_favorite: [],
         condimentsModalVisibility: false,
@@ -25,22 +30,23 @@ class MenuItems extends Component {
     }
 
     componentDidMount() {
-        const menuitemservice = new MenuItemsService()
-        menuitemservice.index(16).then((response) => {
+        let outlet_id = window.location.href.split('/')[4]
+        const menuitemService = new MenuItemsService()
+        menuitemService.index(outlet_id).then((response) => {
             let cards = response.data
             this.props.updateMenuItem(cards)
             this.props.updateMenuCategory(cards)
             this.props.updateSelectedCategory(cards[0].id)
-            this.setState({ cards })
+            this.setState({ cards, outlet_id })
             this.props.updateLoadingStatus(false)
         })
     }
+
     componentWillUnmount() {
         this.props.updateLoadingStatus(true)
     }
     updateCondiment = (current_item,card_condiments) => {
         this.setState({ current_item,card_condiments })
-        console.log(current_item)
     }
     triggerCondimentModal = (update) => {
         let condimentsModalVisibility = update

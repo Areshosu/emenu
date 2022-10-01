@@ -8,7 +8,7 @@ import './checkoutbutton.scoped.css'
 function CheckoutButton() {
         return (
             <Affix offsetBottom={25}>
-                <Link className='checkout-btn' to="/order/checkout">
+                <Link className='checkout-btn' to="../../order/checkout">
                     <Badge count={1}>
                         <RiShoppingCartLine className='checkout-btn-icon'/>
                     </Badge>

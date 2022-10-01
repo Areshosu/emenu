@@ -1,24 +1,23 @@
 import React from 'react';
 import { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import AuthenticationService from '../../../services/public/authenticationservice';
+import AuthenticationService from '../../../services/public/authenticationservice.js';
 
 const User = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        redirectGuest().then((isLoggedIn) => {
+        const authService = new AuthenticationService()
+        let outlet_id = window.location.href.split('/')[4]
+
+        authService.isLoggedIn(outlet_id).then((isLoggedIn) => {
             if (!isLoggedIn) {
-                navigate('/welcome/outlet/6')
+                authService.deleteInfo()
+                navigate(`/welcome/outlet/${outlet_id}`)
             }
         })
     },[navigate])
 
-    async function redirectGuest() {
-        const authService = new AuthenticationService()
-        let outlet_id = window.location.href.split('/')[4]
-        return authService.isLoggedIn(outlet_id)
-    }
     return (
         <Outlet />
     );

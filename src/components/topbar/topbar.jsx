@@ -6,14 +6,26 @@ import './topbar.scoped.css';
 import { Input, AutoComplete } from 'antd'
 import { updateSelectedCategory, updateSelectedSubCategory } from '../../app/stores/menu.js';
 import { connect } from 'react-redux/es/exports.js';
+import AuthenticationService from '../../services/public/authenticationservice.js';
 const { Search } = Input;
 
 class TopBar extends Component {
     state = {
+        outlet: {
+            name: '',
+            location: '',
+            city: ''
+        },
+        table_id: null,
         categories: [],
         selected_category: null,
         selected_sub_category: null,
         search_autocomplete_option: []
+    }
+    componentDidMount = () => {
+        const authService = new AuthenticationService();
+        let outlet = JSON.parse(authService.retrieveInfo('outlet'));
+        this.setState({outlet})
     }
 
     // // userinterface script
@@ -45,18 +57,16 @@ class TopBar extends Component {
         search_autocomplete_option = search_autocomplete_option.map((s) => ({label: s.description,value: s.description}))
         this.setState({search_autocomplete_option})
     }
-    handleSearchDialog = () => {
-        console.log('ouhh stinkyy!')
-    }
+    handleSearchDialog = () => ({})
     render() {
         return (
             <Affix>
                 <div className='top-bar'>
-                    <div className='top-bar-item-content top-bar-table'>TABLE 29</div>
+                    <div className='top-bar-item-content top-bar-table'>TABLE # {this.state.table_id}</div>
                     <div className='top-bar-wrapper'>
                         <Row className='upper-bar'>
                             <Col xs={12} md={6}>
-                                <div className='upper-bar-item'>PACOM RESTAURANT</div>
+                                <div className='upper-bar-item'>{this.state.outlet.name} - {this.state.outlet.city}</div>
                             </Col>
                             <Col>
                                 <AutoComplete className='search-bar' onSearch={this.handleSearchAutoComplete} options={this.state.search_autocomplete_option} onSelect={this.handleSearchDialog}>
