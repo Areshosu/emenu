@@ -26,7 +26,15 @@ class MenuItems extends Component {
         card_favorite: [],
         condimentsModalVisibility: false,
         current_item: null,
-        card_condiments: []
+        card_condiments: [],
+        cart: [],
+        dirtyItemModal: {
+            condiments: [],
+            addonText: '',
+            isTakeout: false,
+            quantity: null
+        },
+        dirtyItem: {}
     }
 
     componentDidMount() {
@@ -45,11 +53,14 @@ class MenuItems extends Component {
     componentWillUnmount() {
         this.props.updateLoadingStatus(true)
     }
-    updateCondiment = (current_item,card_condiments) => {
-        this.setState({ current_item,card_condiments })
+    showItem = (current_item,card_condiments) => {
+        let condimentsModalVisibility = true
+        let dirtyItem = this.state.dirtyItemModal // reset form
+        this.setState({ current_item, card_condiments, dirtyItem, condimentsModalVisibility })
+        console.log(dirtyItem)
     }
-    triggerCondimentModal = (update) => {
-        let condimentsModalVisibility = update
+    hideModal = () => {
+        let condimentsModalVisibility = false
         this.setState({ condimentsModalVisibility })
     }
     updateFavorite = (item, update) => {
@@ -61,6 +72,23 @@ class MenuItems extends Component {
             card_favorite = current_card_favorite.filter((c) => c.id !== item.id)
         }
         this.setState({ card_favorite })
+    }
+    updateDirtyItemCondiment = (event) => {
+        let condiment_item = event.target.value
+        let current_condiments = this.state.dirtyItem.condiments
+        if (event.target.checked) {
+            current_condiments.push(condiment_item)
+        } else {
+            current_condiments = current_condiments.filter((i) => i.id !== condiment_item.id)
+        }
+        let temp = {condiments: current_condiments}
+        let dirtyItem = {...this.state.dirtyItem,...temp}
+        this.setState({dirtyItem})
+    }
+    updateDirtyItemMethod = (param) => {
+        let temp = {isTakeout: param}
+        let dirtyItem = {...this.state.dirtyItem,...temp}
+        this.setState({dirtyItem})
     }
 
     render() {
@@ -99,7 +127,7 @@ class MenuItems extends Component {
                                                                 </span>
                                                             </div>
                                                         </div>
-                                                        <Button onClick={() => {this.updateCondiment(i,b.condiment_item_menu_brand); this.triggerCondimentModal(true)}} className='item-btn' type="primary">
+                                                        <Button onClick={() => this.showItem(i,b.condiment_item_menu_brand)} className='item-btn' type="primary">
                                                             <span>ADD</span>
                                                             <IoBagHandleOutline className='item-icon' />
                                                         </Button>
@@ -115,7 +143,16 @@ class MenuItems extends Component {
                         }
                     </React.Fragment>)
                 }
-                <CondimentModal handleVisibility={this.triggerCondimentModal} visible={this.state.condimentsModalVisibility} condiments={this.state.card_condiments} current_item={this.state.current_item}/>
+                <CondimentModal
+                hideModal={this.hideModal}
+                visible={this.state.condimentsModalVisibility}
+                condiments={this.state.card_condiments}
+                current_item={this.state.current_item}
+                dirtyItem={this.state.dirtyItem}
+
+                updateItemMethod={this.updateDirtyItemMethod}
+                updateItemCondiment={this.updateDirtyItemCondiment}
+                />
                 <CheckoutButton />
             </div>
         );
