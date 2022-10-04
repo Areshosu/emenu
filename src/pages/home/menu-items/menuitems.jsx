@@ -123,10 +123,13 @@ class MenuItems extends Component {
 
         if (!checkAndAddExistItem) {
             let cart = [...this.state.cart,this.state.dirtyItem]
-            storageService.setInfo(['cart',JSON.stringify(cart)])
             this.setState({cart})
             this.props.updateCart(cart)
+            storageService.setInfo(['cart',JSON.stringify(cart)])
         } else {
+            let cart = checkAndAddExistItem
+            this.setState({cart})
+            this.props.updateCart(checkAndAddExistItem)
             storageService.setInfo(['cart',JSON.stringify(checkAndAddExistItem)])
         }
 
@@ -140,13 +143,11 @@ class MenuItems extends Component {
             let c2 = JSON.stringify(c.condiments) === JSON.stringify(item.condiments)
             let c3 = c.isTakeout === item.isTakeout
             let c4 = c.addonText === item.addonText
-            console.log(c1,c2,c3,c4)
             return c1 && c2 && c3 && c4
         })
         let cartItemIndex = cart.indexOf(cartItem)
         if (cartItemIndex > -1) {
         cart[cartItemIndex] = {...cartItem,quantity: cartItem.quantity + 1}
-        this.setState({cart})
         return cart
         }
     }

@@ -14,12 +14,12 @@ class OrderItems extends Component {
                             <div className='inner-box-item order-item-subtitle'>{c.item.name1}</div>
                             <div className='inner-box-item' style={{ marginLeft: 'auto' }}>
                                 <div className='switch-increase'>
-                                    <Button type='primary' size='small'>-</Button>
+                                    <Button type='primary' size='small' onClick={() => this.props.updateQuantity(false,i)}>-</Button>
                                     <span className='switch-increase-inner'>{c.quantity}</span>
-                                    <Button type='primary' size='small'>+</Button>
+                                    <Button type='primary' size='small' onClick={() => this.props.updateQuantity(true,i)}>+</Button>
                                 </div>
                             </div>
-                            <div className='inner-box-item order-item-title'>RM 38</div>
+                            <div className='inner-box-item order-item-title'>RM {c.item.price1}</div>
                         </div>
                     )
                 }
