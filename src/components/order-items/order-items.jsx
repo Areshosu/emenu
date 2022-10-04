@@ -8,20 +8,24 @@ class OrderItems extends Component {
         return (
             <div className='order-items-container'>
                 <div className='order-item-title'>ORDER ITEM(S)</div>
-                <div className='inner-box-container'>
-                    <div className='inner-box-item order-item-subtitle'>2 tiers Tiffin Red</div>
-                    <div className='inner-box-item' style={{marginLeft: 'auto'}}>
-                        <div className='switch-increase'>
-                            <Button type='primary' size='small'>-</Button>
-                            <span className='switch-increase-inner'>1</span>
-                            <Button type='primary' size='small'>+</Button>
+                {
+                    this.props.cart.map((c,i) =>
+                        <div className='inner-box-container' key={'item-'+i}>
+                            <div className='inner-box-item order-item-subtitle'>{c.item.name1}</div>
+                            <div className='inner-box-item' style={{ marginLeft: 'auto' }}>
+                                <div className='switch-increase'>
+                                    <Button type='primary' size='small'>-</Button>
+                                    <span className='switch-increase-inner'>{c.quantity}</span>
+                                    <Button type='primary' size='small'>+</Button>
+                                </div>
+                            </div>
+                            <div className='inner-box-item order-item-title'>RM 38</div>
                         </div>
-                    </div>
-                    <div className='inner-box-item order-item-title'>RM 38</div>
-                </div>
-                <div className="inner-box-container">
+                    )
+                }
+                {/* <div className="inner-box-container">
                     <div className="inner-box-item customize">Customize</div>
-                </div>
+                </div> */}
             </div>
         );
     }

@@ -6,7 +6,8 @@ export const menu = createSlice({
         menuItem: [],
         menuCategory: [],
         selectedCategory: null,
-        selectedSubCategory: null
+        selectedSubCategory: null,
+        cart: []
     },
     reducers: {
         updateMenuCategory: (state, action) => {
@@ -25,10 +26,13 @@ export const menu = createSlice({
         },
         updateSelectedSubCategory: (state, action) => {
             state.selectedSubCategory = action.payload
+        },
+        updateCart: (state,action) => {
+            state.cart = action.payload
         }
     }
 })
 
-export const { updateMenuItem, updateMenuCategory, updateSelectedCategory, updateSelectedSubCategory } = menu.actions
+export const { updateMenuItem, updateMenuCategory, updateSelectedCategory, updateSelectedSubCategory, updateCart } = menu.actions
 
 export default menu.reducer

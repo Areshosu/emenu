@@ -5,14 +5,18 @@ import { Link } from 'react-router-dom';
 import Recommendation from '../../../components/recommendation/recommendation';
 import OrderItems from '../../../components/order-items/order-items';
 import './checkout.scoped.css';
+import StorageService from '../../../services/public/storageservice';
 
 class Checkout extends Component {
-    state = {}
+    state = {
+        cart: []
+    }
+
     render() {
         return (
             <React.Fragment>
                 <Recommendation />
-                <OrderItems />
+                <OrderItems cart={this.state.cart}/>
                 <div className='external-container'>
                 <div className='justify-space'>
                     <span>TOTAL PAYMENT</span>
@@ -28,9 +32,10 @@ class Checkout extends Component {
         );
     }
     componentDidMount() {
-        setTimeout(() => {
-            this.props.updateLoadingStatus(false)
-        }, 1500);
+        const storageService = new StorageService()
+        let cart = JSON.parse(storageService.retrieveInfo('cart'))
+        this.setState({cart})
+        this.props.updateLoadingStatus(false)
     }
 
     componentWillUnmount() {

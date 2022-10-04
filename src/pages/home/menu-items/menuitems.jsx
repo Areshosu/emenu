@@ -10,9 +10,10 @@ import CheckoutButton from '../../../components/checkoutbutton/checkoutbutton';
 import './menuitems.js';
 import './menuitems.scoped.css'
 import MenuItemsService from '../../../services/public/menuitemservice';
+import StorageService from '../../../services/public/storageservice';
 import { connect } from 'react-redux';
 import { updateLoadingStatus } from '../../../app/stores/appstatus';
-import { updateMenuCategory, updateSelectedCategory, updateMenuItem } from '../../../app/stores/menu';
+import { updateMenuCategory, updateSelectedCategory, updateMenuItem, updateCart } from '../../../app/stores/menu';
 
 class MenuItems extends Component {
 
@@ -28,17 +29,18 @@ class MenuItems extends Component {
         current_item: null,
         card_condiments: [],
         cart: [],
-        dirtyItemModal: {
-            condiments: [],
-            addonText: '',
-            isTakeout: false,
-            quantity: null
-        },
+        // modal: {
+        //     condiments: [],
+        //     addonText: '',
+        //     isTakeout: false,
+        //     quantity: null
+        // },
         dirtyItem: {}
     }
 
     componentDidMount() {
         let outlet_id = window.location.href.split('/')[4]
+        const storageService = new StorageService()
         const menuitemService = new MenuItemsService()
         menuitemService.index(outlet_id).then((response) => {
             let cards = response.data
@@ -48,6 +50,11 @@ class MenuItems extends Component {
             this.setState({ cards, outlet_id })
             this.props.updateLoadingStatus(false)
         })
+        let cart = JSON.parse(storageService.retrieveInfo('cart'))
+        if (cart) {
+            this.props.updateCart(cart)
+            this.setState({cart})
+        }
     }
 
     componentWillUnmount() {
@@ -55,9 +62,22 @@ class MenuItems extends Component {
     }
     showItem = (current_item,card_condiments) => {
         let condimentsModalVisibility = true
-        let dirtyItem = this.state.dirtyItemModal // reset form
+        let dirtyItem = {
+            item: {
+                id: current_item.id,
+                description: current_item.description,
+                name1: current_item.name1,
+                name2: current_item.name2,
+                price1: current_item.price1,
+                price2: current_item.price2,
+                price3: current_item.price3
+            },
+            condiments: [],
+            addonText: '',
+            isTakeout: false,
+            quantity: 1
+        } // reset form
         this.setState({ current_item, card_condiments, dirtyItem, condimentsModalVisibility })
-        console.log(dirtyItem)
     }
     hideModal = () => {
         let condimentsModalVisibility = false
@@ -89,6 +109,46 @@ class MenuItems extends Component {
         let temp = {isTakeout: param}
         let dirtyItem = {...this.state.dirtyItem,...temp}
         this.setState({dirtyItem})
+    }
+    updateAddonText = (param) => {
+        let temp = {addonText: param.target.value}
+        let dirtyItem = {...this.state.dirtyItem,...temp}
+        this.setState({dirtyItem})
+    }
+
+    add = () => {
+        let storageService = new StorageService()
+        let currentCart = this.state.cart.filter((c) => true)
+        let checkAndAddExistItem = this.checkAndAddExistItem(currentCart,this.state.dirtyItem)
+
+        if (!checkAndAddExistItem) {
+            let cart = [...this.state.cart,this.state.dirtyItem]
+            storageService.setInfo(['cart',JSON.stringify(cart)])
+            this.setState({cart})
+            this.props.updateCart(cart)
+        } else {
+            storageService.setInfo(['cart',JSON.stringify(checkAndAddExistItem)])
+        }
+
+        let condimentsModalVisibility = false
+        this.setState({ condimentsModalVisibility })
+    }
+
+    checkAndAddExistItem = (cart,item) => {
+        let cartItem = cart.find((c) => {
+            let c1 = JSON.stringify(c.item) === JSON.stringify(item.item)
+            let c2 = JSON.stringify(c.condiments) === JSON.stringify(item.condiments)
+            let c3 = c.isTakeout === item.isTakeout
+            let c4 = c.addonText === item.addonText
+            console.log(c1,c2,c3,c4)
+            return c1 && c2 && c3 && c4
+        })
+        let cartItemIndex = cart.indexOf(cartItem)
+        if (cartItemIndex > -1) {
+        cart[cartItemIndex] = {...cartItem,quantity: cartItem.quantity + 1}
+        this.setState({cart})
+        return cart
+        }
     }
 
     render() {
@@ -152,6 +212,8 @@ class MenuItems extends Component {
 
                 updateItemMethod={this.updateDirtyItemMethod}
                 updateItemCondiment={this.updateDirtyItemCondiment}
+                updateAddonText={this.updateAddonText}
+                add={this.add}
                 />
                 <CheckoutButton />
             </div>
@@ -161,6 +223,6 @@ class MenuItems extends Component {
 
 const mapStateToProps = (state) => ({ isLoading: state.appstat.isLoading, selected_category: state.menu.selectedCategory, selected_sub_category: state.menu.selectedSubCategory })
 
-const mapDispatchToProps = { updateLoadingStatus, updateMenuCategory, updateSelectedCategory, updateMenuItem }
+const mapDispatchToProps = { updateLoadingStatus, updateMenuCategory, updateSelectedCategory, updateMenuItem, updateCart }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MenuItems);

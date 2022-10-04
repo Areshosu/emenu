@@ -36,10 +36,10 @@ function CondimentModal(props) {
                     </li>
                 </Panel>
                 <Panel header="Additional instruction" key="3">
-                    <TextArea placeholder='Your order requirement here' rows={5} />
+                    <TextArea placeholder='Your order requirement here' rows={5} onChange={(e) => props.updateAddonText(e)} value={props.dirtyItem.addonText}/>
                 </Panel>
             </Collapse>
-            <Button type='primary' className='add-to-cart-btn'>
+            <Button type='primary' className='add-to-cart-btn' onClick={props.add}>
                 <div className='btn-item'>
                     <span>ADD</span>
                     <IoIosAddCircleOutline className='btn-icon' />
