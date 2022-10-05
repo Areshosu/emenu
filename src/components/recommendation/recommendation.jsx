@@ -22,7 +22,7 @@ class Recommendation extends Component {
                                                 <div className='box-item-title'>{i.name1}</div>
                                                 <div>RM {i.price1}</div>
                                                 <div className='add-btn'>
-                                                    <Button shape='round' type='primary' onClick={() => this.props.showModal(i,b.condiment_item_menu_brand)}>ADD +</Button>
+                                                    <Button shape='round' type='primary' onClick={() => this.props.showModal(i, b.condiment_item_menu_brand)}>ADD +</Button>
                                                 </div>
                                             </div>
                                         </div>

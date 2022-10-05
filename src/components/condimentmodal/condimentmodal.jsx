@@ -39,9 +39,9 @@ function CondimentModal(props) {
                     <TextArea placeholder='Your order requirement here' rows={5} onChange={(e) => props.updateAddonText(e)} value={props.dirtyItem.addonText}/>
                 </Panel>
             </Collapse>
-            <Button type='primary' className='add-to-cart-btn' onClick={props.add}>
+            <Button type='primary' className='add-to-cart-btn' onClick={() => props.isEdit? props.edit(props.current_index) : props.add()}>
                 <div className='btn-item'>
-                    <span>ADD</span>
+                    <span>Save</span>
                     <IoIosAddCircleOutline className='btn-icon' />
                 </div>
             </Button>

@@ -72,6 +72,7 @@ class MenuItems extends Component {
                 price2: current_item.price2,
                 price3: current_item.price3
             },
+            available_condiments: [],
             condiments: [],
             addonText: '',
             isTakeout: false,
@@ -119,10 +120,11 @@ class MenuItems extends Component {
     add = () => {
         let storageService = new StorageService()
         let currentCart = this.state.cart.filter((c) => true)
-        let checkAndAddExistItem = this.checkAndAddExistItem(currentCart,this.state.dirtyItem)
+        let dirtyItem = {...this.state.dirtyItem,available_condiments: this.state.card_condiments}
+        let checkAndAddExistItem = this.checkAndAddExistItem(currentCart,dirtyItem)
 
         if (!checkAndAddExistItem) {
-            let cart = [...this.state.cart,this.state.dirtyItem]
+            let cart = [...this.state.cart,dirtyItem]
             this.setState({cart})
             this.props.updateCart(cart)
             storageService.setInfo(['cart',JSON.stringify(cart)])

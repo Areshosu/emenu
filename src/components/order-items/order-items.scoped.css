@@ -6,26 +6,40 @@
     padding: 10px 20px 10px 20px;
 }
 
+.order-main-title {
+    color: grey;
+    font-weight: bold;
+    font-size: small;
+}
+
 .order-item-title {
     color: grey;
     font-weight: bold;
     font-size: small;
-    margin-bottom: 20px;
+    width: 35%;
+    text-align: end;
 }
 
 .order-item-subtitle {
     font-size: small;
+    width: 55%;
 }
 
 .customize {
     font-size: smaller;
     font-weight: bold;
+    cursor: pointer;
     color: var(--custom-primary-7);
+}
+
+.external-box-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
 }
 
 .inner-box-container {
     display: flex;
-    margin-bottom: 35px;
 }
 
 .inner-box-item {
@@ -35,7 +49,8 @@
 .switch-increase {
     display: flex;
     width: 120px;
-    margin-right: 50px;
+    margin-left: 50px;
+    /* margin-right: 50px; */
 }
 
 .switch-increase-inner {
@@ -49,5 +64,11 @@
         margin: auto;
         width: auto;
         border: none;
+    }
+    .order-item-subtitle {
+        width: 30%;
+    }
+    .order-item-title {
+        width: 20%;
     }
 }
