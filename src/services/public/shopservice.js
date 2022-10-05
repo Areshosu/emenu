@@ -15,6 +15,13 @@ class ShopService {
         }).then((response) => response.json())
     }
 
+    validateTable($outlet_id,$table_id) {
+        return fetch(`${this.domain}/api/e-menu/v2/menu-items/outlet/${$outlet_id}/table/${$table_id}`,{
+            headers: headers,
+            method: 'GET'
+        }).then((response) => response.json())
+    }
+
     tax($outlet_id) {
         return fetch(`${this.domain}/api/e-menu/v2/menu-items/outlet/${$outlet_id}/tax`,{
             headers: headers,

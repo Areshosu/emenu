@@ -6,13 +6,13 @@ import { IoIosArrowForward } from 'react-icons/io'
 import './checkoutbutton.scoped.css'
 import { useSelector } from 'react-redux';
 
-function CheckoutButton() {
+function CheckoutButton(props) {
 
     const carts = useSelector(state => state.menu);
 
         return (
             <Affix offsetBottom={25}>
-                <Link className='checkout-btn' to="../../order/checkout">
+                <Link className='checkout-btn' to={`../../order/checkout${props.location.search}`}>
                     <Badge count={carts.cart? carts.cart.length : 0}>
                         <RiShoppingCartLine className='checkout-btn-icon'/>
                     </Badge>

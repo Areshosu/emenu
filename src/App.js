@@ -15,7 +15,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Loading />}>
-          <Route path="outlet/:id">
+          <Route path="outlet/:outlet_id">
             <Route path="user" element={<User />}>
               <Route path="menu" element={<Home />}>
                 <Route path="menu-items" element={<MenuItems />} />
@@ -26,7 +26,7 @@ function App() {
             </Route>
           </Route>
           <Route path="welcome">
-            <Route path="outlet/:id" element={<Outlet />}/>
+            <Route path="outlet/:outlet_id" element={<Outlet />}/>
           </Route>
         </Route>
         <Route path="*" element={<Error404 />} />

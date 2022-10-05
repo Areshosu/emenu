@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Input, Button } from 'antd';
+import { Input, Button, Modal } from 'antd';
 import { IoMdExit } from 'react-icons/io';
 import { connect } from 'react-redux';
 import { updateLoadingStatus } from '../../../app/stores/appstatus';
@@ -9,6 +9,8 @@ import './outlet.scoped.css';
 import ShopService from '../../../services/public/shopservice';
 import { compose } from '@reduxjs/toolkit';
 import { withRouter } from '../../../components/withRouter/withRouter';
+import { useParam } from '../../../components/useParam/useParam';
+import { useLocation } from '../../../components/useLocation/useLocation';
 
 class Outlet extends Component {
     state = {
@@ -27,11 +29,6 @@ class Outlet extends Component {
             name: '',
             email: '',
             phone: '',
-        },
-        dialog: {
-            visibility: false,
-            message: '',
-            type: 'error'
         }
     }
     render() {
@@ -75,25 +72,36 @@ class Outlet extends Component {
         );
     }
     componentDidMount() {
-        let outlet_id = window.location.href.split('/')[5]
+        let outlet_id = this.props.params.outlet_id
         let table_id = this.checkTable()
         const authService = new AuthenticationService()
+        const shopService = new ShopService()
 
         if (!table_id) {
-            let temp = {visibility: true,message: 'Something went wrong :('}
-            let dialog = {...this.state.dialog,...temp}
-            this.setState({dialog})
+            this.showErrorDialog(
+                'Error',
+                'Table not found :<('
+            )
         } else {
-            authService.setInfo(['table_id',table_id])   
+            shopService.validateTable(outlet_id,table_id).then((response) => {
+                if (response.data != null) {
+                    authService.setInfo(['table_id',table_id])   
+                } else {
+                    this.showErrorDialog(
+                        'Error',
+                        'Invalid Table :<('
+                    )   
+                }
+            })
         }
 
         authService.isLoggedIn(outlet_id).then((isLoggedIn) => {
             if (isLoggedIn) {
-                    this.props.navigate(`/outlet/${outlet_id}/user/menu/menu-items`)
+                let searchParams = this.props.location.search
+                    this.props.navigate(`/outlet/${outlet_id}/user/menu/menu-items${searchParams}`)
             }
         })
 
-        const shopService = new ShopService()
             shopService.index(outlet_id).then((res) => {
                 let outlet = res.data
                 authService.setInfo(['outlet',JSON.stringify(outlet)])
@@ -103,6 +111,15 @@ class Outlet extends Component {
     }
     componentWillUnmount() {
         this.props.updateLoadingStatus(true)
+    }
+    showErrorDialog = (title,message) => {
+        Modal.error({
+            title: title,
+            content: message,
+            centered: true,
+            closable: false,
+            okButtonProps: {style: {display: 'none'}}
+        })
     }
 
     handleChange = (key,event) => {
@@ -150,7 +167,10 @@ class Outlet extends Component {
             authService.setInfo(['email',this.state.userData.email])
             authService.setInfo(['phone',this.state.userData.phone])
             authService.setInfo(['outlet_id',this.state.outlet.id])
-            this.props.navigate(`/outlet/${this.state.outlet.id}/user/menu/menu-items`)
+            authService.setInfo(['cart',JSON.stringify([])])
+
+            let searchParams = this.props.location.search
+            this.props.navigate(`/outlet/${this.state.outlet.id}/user/menu/menu-items${searchParams}`)
         }
     }
 }
@@ -160,6 +180,8 @@ const mapStateToProps = (state) => ({ isLoading: state.appstat.isLoading })
 const mapDispatchToProps = { updateLoadingStatus }
 
 export default compose(
+    useParam,
+    useLocation,
     withRouter,
     connect(mapStateToProps, mapDispatchToProps)
 )(Outlet);

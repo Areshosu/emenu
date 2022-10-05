@@ -1,8 +1,12 @@
+import { compose } from '@reduxjs/toolkit';
 import React, { Component } from 'react';
 import { BsPhone } from 'react-icons/bs'
 import { IoMail } from 'react-icons/io5'
 import Avatar from '../../assets/images/user-default.jpg'
 import AuthenticationService from '../../services/public/authenticationservice';
+import { useLocation } from '../useLocation/useLocation';
+import { useParam } from '../useParam/useParam';
+import { withRouter } from '../withRouter/withRouter';
 import './sidebar.scoped.css'
 
 class SideBar extends Component {
@@ -15,7 +19,7 @@ class SideBar extends Component {
     }
 
     componentDidMount = () => {
-        const authService = new AuthenticationService();
+        const authService = new AuthenticationService()
         let userData = {
             name:  authService.retrieveInfo('name'),
             email: authService.retrieveInfo('email'),
@@ -23,6 +27,15 @@ class SideBar extends Component {
         }
         this.setState({userData})
     }
+
+    logOut = () => {
+        let outlet_id = this.props.params.outlet_id
+        const authService = new AuthenticationService()
+        authService.deleteInfo()
+
+        let searchParams = this.props.location.search
+        this.props.navigate(`/welcome/outlet/${outlet_id}${searchParams}`)
+    } 
     
     render() {
         return (
@@ -44,6 +57,11 @@ class SideBar extends Component {
                     </a>
                 </li>
                 <li>
+                    <a href="#/" rel="noopener noreferrer" onClick={this.logOut}>
+                        <span className='powered-title text-style'> Logout </span>
+                    </a>
+                </li>
+                <li>
                     <a href="https://pacomsolution.com" target="_blank" rel="noopener noreferrer">
                         <span className='powered-title text-style'> Powered by @pacomsolution.com </span>
                     </a>
@@ -53,4 +71,8 @@ class SideBar extends Component {
     }
 }
 
-export default SideBar;
+export default compose(
+    withRouter,
+    useParam,
+    useLocation
+)(SideBar);

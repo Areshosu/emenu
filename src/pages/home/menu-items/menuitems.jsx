@@ -14,6 +14,9 @@ import StorageService from '../../../services/public/storageservice';
 import { connect } from 'react-redux';
 import { updateLoadingStatus } from '../../../app/stores/appstatus';
 import { updateMenuCategory, updateSelectedCategory, updateMenuItem, updateCart } from '../../../app/stores/menu';
+import { compose } from '@reduxjs/toolkit';
+import { useParam } from '../../../components/useParam/useParam';
+import { useLocation } from '../../../components/useLocation/useLocation';
 
 class MenuItems extends Component {
 
@@ -39,7 +42,7 @@ class MenuItems extends Component {
     }
 
     componentDidMount() {
-        let outlet_id = window.location.href.split('/')[4]
+        let outlet_id = this.props.params.outlet_id
         const storageService = new StorageService()
         const menuitemService = new MenuItemsService()
         menuitemService.index(outlet_id).then((response) => {
@@ -218,7 +221,7 @@ class MenuItems extends Component {
                 updateAddonText={this.updateAddonText}
                 add={this.add}
                 />
-                <CheckoutButton />
+                <CheckoutButton location={this.props.location}/>
             </div>
         );
     }
@@ -228,4 +231,8 @@ const mapStateToProps = (state) => ({ isLoading: state.appstat.isLoading, select
 
 const mapDispatchToProps = { updateLoadingStatus, updateMenuCategory, updateSelectedCategory, updateMenuItem, updateCart }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MenuItems);
+export default compose(
+    useParam,
+    useLocation,
+    connect(mapStateToProps, mapDispatchToProps)
+)(MenuItems);

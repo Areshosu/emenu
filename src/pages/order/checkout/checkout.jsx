@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { updateLoadingStatus } from '../../../app/stores/appstatus';
-import { Link } from 'react-router-dom';
 import Recommendation from '../../../components/recommendation/recommendation';
 import CondimentModal from '../../../components/condimentmodal/condimentmodal';
 import OrderItems from '../../../components/order-items/order-items';
@@ -10,11 +9,15 @@ import StorageService from '../../../services/public/storageservice';
 import MenuItemsService from '../../../services/public/menuitemservice';
 import { updateCart } from '../../../app/stores/menu';
 import _ from 'lodash';
+import ShopService from '../../../services/public/shopservice';
+import { compose } from '@reduxjs/toolkit';
+import { useParam } from '../../../components/useParam/useParam';
 
 class Checkout extends Component {
     state = {
         isEdit: false,
         cards: [],
+        shop_tax: [],
         condimentsModalVisibility: false,
         current_item: null,
         current_index: null,
@@ -23,11 +26,16 @@ class Checkout extends Component {
         cart: []
     }
     componentDidMount() {
-        let outlet_id = window.location.href.split('/')[4]
+        let outlet_id = this.props.params.outlet_id
         const menuitemService = new MenuItemsService()
         menuitemService.index(outlet_id).then((response) => {
-            let cards = response.data.filter((c,i) => i === 0) // get first record as recommendation
+            let cards = response.data.filter((c, i) => i === 0) // get first record as recommendation
             this.setState({ cards, outlet_id })
+        })
+        const shopService = new ShopService()
+        shopService.tax(outlet_id).then((response) => {
+            let shop_tax = response.data
+            this.setState({ shop_tax })
             this.props.updateLoadingStatus(false)
         })
 
@@ -42,7 +50,7 @@ class Checkout extends Component {
     showModal = (
         current_item, card_condiments, // new
         oldDirtyItem, editIndex //edit
-        ) => {
+    ) => {
         let isEdit = false
         let current_index = editIndex
 
@@ -65,15 +73,15 @@ class Checkout extends Component {
         } // reset form
         if (oldDirtyItem) {
             isEdit = true
-            dirtyItem = {...oldDirtyItem}
+            dirtyItem = { ...oldDirtyItem }
         }
 
-        this.setState({ 
+        this.setState({
             condimentsModalVisibility,
-            dirtyItem, 
-            current_item, 
-            card_condiments, 
-            
+            dirtyItem,
+            current_item,
+            card_condiments,
+
             isEdit,
             current_index
         })
@@ -86,7 +94,7 @@ class Checkout extends Component {
         let condiment_item = event.target.value
         let current_condiments = this.state.dirtyItem.condiments
         if (event.target.checked) {
-            current_condiments = [...current_condiments,condiment_item]
+            current_condiments = [...current_condiments, condiment_item]
         } else {
             current_condiments = current_condiments.filter((i) => i.id !== condiment_item.id)
         }
@@ -109,7 +117,7 @@ class Checkout extends Component {
         cart[index].quantity += isAdd ? 1 : -1
 
         if (cart[index].quantity === 0) {
-            cart.splice(index,1)
+            cart.splice(index, 1)
         }
 
         this.setState({ cart })
@@ -122,11 +130,11 @@ class Checkout extends Component {
         let condimentsModalVisibility = false
         let storageService = new StorageService()
         let currentCart = this.state.cart.filter((c) => true)
-        let dirtyItem = {...this.state.dirtyItem,available_condiments: this.state.card_condiments}
-        let checkAndAddExistItem = this.checkAndAddExistItem(currentCart,dirtyItem)
+        let dirtyItem = { ...this.state.dirtyItem, available_condiments: this.state.card_condiments }
+        let checkAndAddExistItem = this.checkAndAddExistItem(currentCart, dirtyItem)
 
-            let cart = checkAndAddExistItem? checkAndAddExistItem : [...currentCart,dirtyItem] 
-            storageService.setInfo(['cart',JSON.stringify(cart)])
+        let cart = checkAndAddExistItem ? checkAndAddExistItem : [...currentCart, dirtyItem]
+        storageService.setInfo(['cart', JSON.stringify(cart)])
 
         this.setState({ condimentsModalVisibility, cart })
     }
@@ -136,16 +144,16 @@ class Checkout extends Component {
         let storageService = new StorageService()
         let cart = this.state.cart.filter((c) => true)
 
-            cart[index] = {...this.state.dirtyItem}
-            this.setState({cart})
-            this.props.updateCart(cart)
+        cart[index] = { ...this.state.dirtyItem }
+        this.setState({ cart })
+        this.props.updateCart(cart)
 
         let condimentsModalVisibility = false
-        this.setState({ cart,condimentsModalVisibility })
-        storageService.setInfo(['cart',JSON.stringify(cart)])
+        this.setState({ cart, condimentsModalVisibility })
+        storageService.setInfo(['cart', JSON.stringify(cart)])
     }
 
-    checkAndAddExistItem = (cart,item) => {
+    checkAndAddExistItem = (cart, item) => {
         let cartItem = cart.find((c) => {
             let c1 = JSON.stringify(c.item) === JSON.stringify(item.item)
             let c2 = JSON.stringify(c.condiments) === JSON.stringify(item.condiments)
@@ -155,40 +163,45 @@ class Checkout extends Component {
         })
         let cartItemIndex = cart.indexOf(cartItem)
         if (cartItemIndex > -1) {
-        cart[cartItemIndex] = {...cartItem,quantity: cartItem.quantity + 1}
-        return cart
+            cart[cartItemIndex] = { ...cartItem, quantity: cartItem.quantity + 1 }
+            return cart
         }
     }
 
-    renderTotal (carts) {
+    renderTotal(carts) {
         let total = 0
         carts.forEach((cart) => {
             let itemPrice = Number(cart.item.price1)
-            let condimentsPrice = Number(_.sum(_.pluck(cart.condiments,'amount')))
+            let condimentsPrice = Number(_.sum(_.pluck(cart.condiments, 'amount')))
             total += (itemPrice + condimentsPrice) * cart.quantity
         })
-        let tax = (total / 100) * 2 // TAX
-        return _.round(total + tax,2)
+        let taxs_nets = 0
+        this.state.shop_tax.forEach((tax) => taxs_nets += (total / 100)*tax.value)
+        return _.round(total + taxs_nets, 2)
     }
 
     render() {
         return (
             <React.Fragment>
-                <Recommendation cards={this.state.cards} showModal={this.showModal}/>
-                <OrderItems cart={this.state.cart} updateQuantity={this.updateItemQuantity} showModal={this.showModal}/>
+                <Recommendation cards={this.state.cards} showModal={this.showModal} />
+                <OrderItems cart={this.state.cart} updateQuantity={this.updateItemQuantity} showModal={this.showModal} />
                 <div className='external-container'>
-                    <div className='justify-space'>
-                        <span>TAX</span>
-                        <span>2%</span>
-                    </div>
+                    {
+                        this.state.shop_tax.map((tax_item,index) =>
+                            <div className='justify-space' key={'tax_item-'+index}>
+                                <span>{tax_item.name}</span>
+                                <span>{tax_item.value}%</span>
+                            </div>
+                        )
+                    }
                     <div className='justify-space'>
                         <span>TOTAL PAYMENT</span>
                         <span>RM {this.renderTotal(this.state.cart)}</span>
                     </div>
                     <div className='justify-center'>
-                        <Link className='confirm-btn' to="/order/checkout">
+                        <div className='confirm-btn' onClick={() => this.props.updateLoadingStatus(true)}>
                             <span className='confirm-btn-title'>CONFIRM ORDER</span>
-                        </Link>
+                        </div>
                     </div>
                 </div>
                 <CondimentModal
@@ -215,4 +228,7 @@ const mapStateToProps = (state) => ({ isLoading: state.appstat.isLoading })
 
 const mapDispatchToProps = { updateLoadingStatus, updateCart }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Checkout);
+export default compose(
+    useParam,
+    connect(mapStateToProps, mapDispatchToProps)
+)(Checkout);
