@@ -12,6 +12,8 @@ import _ from 'lodash';
 import ShopService from '../../../services/public/shopservice';
 import { compose } from '@reduxjs/toolkit';
 import { useParam } from '../../../components/useParam/useParam';
+import { Collapse, Checkbox } from 'antd';
+const { Panel } = Collapse;
 
 class Checkout extends Component {
     state = {
@@ -22,6 +24,8 @@ class Checkout extends Component {
         current_item: null,
         current_index: null,
         card_condiments: [],
+        payment_methods: [],
+        selected_payment_method: null,
         dirtyItem: {},
         cart: []
     }
@@ -37,6 +41,10 @@ class Checkout extends Component {
             let shop_tax = response.data
             this.setState({ shop_tax })
             this.props.updateLoadingStatus(false)
+        })
+        shopService.payment_methods(outlet_id).then((response) => {
+            let payment_methods = response.data
+            this.setState({ payment_methods })
         })
 
         const storageService = new StorageService()
@@ -125,6 +133,13 @@ class Checkout extends Component {
         const storageService = new StorageService()
         storageService.setInfo(['cart', JSON.stringify(cart)])
     }
+    updatePaymentMethod = (event) => {
+        let selected_payment_method = null
+        if (event.target.checked) {
+            selected_payment_method = event.target.value
+        }
+        this.setState({selected_payment_method})
+    }
 
     add = () => {
         let condimentsModalVisibility = false
@@ -176,8 +191,12 @@ class Checkout extends Component {
             total += (itemPrice + condimentsPrice) * cart.quantity
         })
         let taxs_nets = 0
-        this.state.shop_tax.forEach((tax) => taxs_nets += (total / 100)*tax.value)
+        this.state.shop_tax.forEach((tax) => taxs_nets += (total / 100) * tax.value)
         return _.round(total + taxs_nets, 2)
+    }
+
+    isValidOrder = () => {
+        return this.state.cart.length > 0 && this.state.selected_payment_method != null
     }
 
     render() {
@@ -187,8 +206,8 @@ class Checkout extends Component {
                 <OrderItems cart={this.state.cart} updateQuantity={this.updateItemQuantity} showModal={this.showModal} />
                 <div className='external-container'>
                     {
-                        this.state.shop_tax.map((tax_item,index) =>
-                            <div className='justify-space' key={'tax_item-'+index}>
+                        this.state.shop_tax.map((tax_item, index) =>
+                            <div className='justify-space' key={'tax_item-' + index}>
                                 <span>{tax_item.name}</span>
                                 <span>{tax_item.value}%</span>
                             </div>
@@ -198,8 +217,22 @@ class Checkout extends Component {
                         <span>TOTAL PAYMENT</span>
                         <span>RM {this.renderTotal(this.state.cart)}</span>
                     </div>
+                    <Collapse>
+                        <Panel header="Payment Method">
+                            <li>
+                                {
+                                    this.state.payment_methods.map((method,index) => 
+                                    <ul style={{marginTop: '25px'}} key={'method-'+index}>
+                                        <Checkbox checked={this.state.selected_payment_method?.id === method.id} onChange={(event) => this.updatePaymentMethod(event)} style={{marginRight: '5%'}} value={method}/>
+                                        <span>{method.name}</span>
+                                    </ul>
+                                    )
+                                }
+                            </li>
+                        </Panel>
+                    </Collapse>
                     <div className='justify-center'>
-                        <div className='confirm-btn' onClick={() => this.props.updateLoadingStatus(true)}>
+                        <div className='confirm-btn' style={{backgroundColor: this.isValidOrder()? null :'grey'}} onClick={() => this.props.updateLoadingStatus(true)}>
                             <span className='confirm-btn-title'>CONFIRM ORDER</span>
                         </div>
                     </div>

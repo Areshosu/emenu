@@ -1,9 +1,7 @@
 .item-list-container {
     margin-left: 0px !important;
     margin-right: 0px !important;
-    padding-left: 15px;
-    padding-right: 15px;
-    padding-bottom: 150px;
+    padding: 0px 15px 150px 15px;
 }
 
 .item-container {
@@ -77,6 +75,10 @@
     margin: auto;
     margin-bottom: 5px;
     width: 95%;
+}
+
+.grid-container {
+    overflow-y: auto;
 }
 
 .gridbar {

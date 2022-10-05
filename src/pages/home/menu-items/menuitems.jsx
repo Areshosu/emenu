@@ -56,14 +56,14 @@ class MenuItems extends Component {
         let cart = JSON.parse(storageService.retrieveInfo('cart'))
         if (cart) {
             this.props.updateCart(cart)
-            this.setState({cart})
+            this.setState({ cart })
         }
     }
 
     componentWillUnmount() {
         this.props.updateLoadingStatus(true)
     }
-    showItem = (current_item,card_condiments) => {
+    showItem = (current_item, card_condiments) => {
         let condimentsModalVisibility = true
         let dirtyItem = {
             item: {
@@ -105,44 +105,44 @@ class MenuItems extends Component {
         } else {
             current_condiments = current_condiments.filter((i) => i.id !== condiment_item.id)
         }
-        let temp = {condiments: current_condiments}
-        let dirtyItem = {...this.state.dirtyItem,...temp}
-        this.setState({dirtyItem})
+        let temp = { condiments: current_condiments }
+        let dirtyItem = { ...this.state.dirtyItem, ...temp }
+        this.setState({ dirtyItem })
     }
     updateDirtyItemMethod = (param) => {
-        let temp = {isTakeout: param}
-        let dirtyItem = {...this.state.dirtyItem,...temp}
-        this.setState({dirtyItem})
+        let temp = { isTakeout: param }
+        let dirtyItem = { ...this.state.dirtyItem, ...temp }
+        this.setState({ dirtyItem })
     }
     updateAddonText = (param) => {
-        let temp = {addonText: param.target.value}
-        let dirtyItem = {...this.state.dirtyItem,...temp}
-        this.setState({dirtyItem})
+        let temp = { addonText: param.target.value }
+        let dirtyItem = { ...this.state.dirtyItem, ...temp }
+        this.setState({ dirtyItem })
     }
 
     add = () => {
         let storageService = new StorageService()
         let currentCart = this.state.cart.filter((c) => true)
-        let dirtyItem = {...this.state.dirtyItem,available_condiments: this.state.card_condiments}
-        let checkAndAddExistItem = this.checkAndAddExistItem(currentCart,dirtyItem)
+        let dirtyItem = { ...this.state.dirtyItem, available_condiments: this.state.card_condiments }
+        let checkAndAddExistItem = this.checkAndAddExistItem(currentCart, dirtyItem)
 
         if (!checkAndAddExistItem) {
-            let cart = [...this.state.cart,dirtyItem]
-            this.setState({cart})
+            let cart = [...this.state.cart, dirtyItem]
+            this.setState({ cart })
             this.props.updateCart(cart)
-            storageService.setInfo(['cart',JSON.stringify(cart)])
+            storageService.setInfo(['cart', JSON.stringify(cart)])
         } else {
             let cart = checkAndAddExistItem
-            this.setState({cart})
+            this.setState({ cart })
             this.props.updateCart(checkAndAddExistItem)
-            storageService.setInfo(['cart',JSON.stringify(checkAndAddExistItem)])
+            storageService.setInfo(['cart', JSON.stringify(checkAndAddExistItem)])
         }
 
         let condimentsModalVisibility = false
         this.setState({ condimentsModalVisibility })
     }
 
-    checkAndAddExistItem = (cart,item) => {
+    checkAndAddExistItem = (cart, item) => {
         let cartItem = cart.find((c) => {
             let c1 = JSON.stringify(c.item) === JSON.stringify(item.item)
             let c2 = JSON.stringify(c.condiments) === JSON.stringify(item.condiments)
@@ -152,8 +152,8 @@ class MenuItems extends Component {
         })
         let cartItemIndex = cart.indexOf(cartItem)
         if (cartItemIndex > -1) {
-        cart[cartItemIndex] = {...cartItem,quantity: cartItem.quantity + 1}
-        return cart
+            cart[cartItemIndex] = { ...cartItem, quantity: cartItem.quantity + 1 }
+            return cart
         }
     }
 
@@ -162,66 +162,68 @@ class MenuItems extends Component {
             <div style={{ backgroundColor: 'rgb(238, 238, 238)' }}>
                 <TopBanners />
                 {
-                    this.state.cards.map((c) => this.props.selected_category === c.id && <React.Fragment key={`cc-${c.id}`}>
-                        <div className='gridbar'>
-                            <span className='gridtitle'> {c.description} </span>
-                            <Divider className='divider' type='horizontal'></Divider>
-                        </div>
-                        {
-                            c.menu_brands && c.menu_brands.map((b) => <React.Fragment key={`bb-${b.id}`}>
-                                {
-                                    !!b.menu_item.length && <React.Fragment>
-                                        <div className="gridbar">
-                                            <span className='gridsubtitle' id={`gsb-${b.id}`}> {b.description} </span>
-                                        </div>
-                                        <Row className='item-list-container'>
-                                            {
-                                                b.menu_item.map((i) => <Col key={i.id} xs={6} md={6} lg={3} xxl={2} style={{ padding: '0px' }}>
-                                                    <div className="item-container">
-                                                        <Badge.Ribbon text="new !!" style={{ paddingRight: '20px', display: 'none' }}>
-                                                            {/* <Skeleton.Image active={true} style={{display: this.checkImageLoadingStatus(i.id)? 'none':'block'}}></Skeleton.Image> */}
-                                                            <img src="https://img.freepik.com/premium-photo/big-hamburger-with-double-beef-french-fries_252907-8.jpg?w=2000" className="item-box" id="item-box" alt='' />
-                                                        </Badge.Ribbon>
-                                                        <div className='item-description'>
-                                                            <span className='item-description-title'>{i.name1}</span>
-                                                            <span className='item-description-long'> {i.description} </span>
-                                                            <div className='item-description-group'>
-                                                                <span className='item-description-subtitle'>MYR {i.price1}</span>
-                                                                <span className='item-description-group-icon'>
-                                                                    {this.state.card_favorite.find((c) => c.id === i.id) ? <MdFavorite onClick={() => this.updateFavorite(i, false)} className='item-description-info' style={{ marginRight: '10px' }} /> : <MdOutlineFavoriteBorder onClick={() => this.updateFavorite(i, true)} className='item-description-info' style={{ marginRight: '10px' }} />}
-                                                                    <AiOutlineInfoCircle className='item-description-info' />
-                                                                </span>
+                    this.state.cards.map((c) => this.props.selected_category === c.id &&
+                        <React.Fragment key={`cc-${c.id}`}>
+                            <div className='gridbar'>
+                                <span className='gridtitle'> {c.description} </span>
+                                <Divider className='divider' type='horizontal'></Divider>
+                            </div>
+                            {
+                                c.menu_brands && c.menu_brands.map((b) => <React.Fragment key={`bb-${b.id}`}>
+                                    {
+                                        !!b.menu_item.length && <React.Fragment>
+                                            <div className="gridbar">
+                                                <span className='gridsubtitle' id={`gsb-${b.id}`}> {b.description} </span>
+                                            </div>
+                                            <Row className='item-list-container'>
+                                                {
+                                                    b.menu_item.map((i) => <Col key={i.id} xs={6} md={6} lg={3} xxl={2} style={{ padding: '0px' }}>
+                                                        <div className="item-container">
+                                                            <Badge.Ribbon text="new !!" style={{ paddingRight: '20px', display: 'none' }}>
+                                                                {/* <Skeleton.Image active={true} style={{display: this.checkImageLoadingStatus(i.id)? 'none':'block'}}></Skeleton.Image> */}
+                                                                <img src="https://img.freepik.com/premium-photo/big-hamburger-with-double-beef-french-fries_252907-8.jpg?w=2000" className="item-box" id="item-box" alt='' />
+                                                            </Badge.Ribbon>
+                                                            <div className='item-description'>
+                                                                <span className='item-description-title'>{i.name1}</span>
+                                                                <span className='item-description-long'> {i.description} </span>
+                                                                <div className='item-description-group'>
+                                                                    <span className='item-description-subtitle'>MYR {i.price1}</span>
+                                                                    <span className='item-description-group-icon'>
+                                                                        {this.state.card_favorite.find((c) => c.id === i.id) ? <MdFavorite onClick={() => this.updateFavorite(i, false)} className='item-description-info' style={{ marginRight: '10px' }} /> : <MdOutlineFavoriteBorder onClick={() => this.updateFavorite(i, true)} className='item-description-info' style={{ marginRight: '10px' }} />}
+                                                                        <AiOutlineInfoCircle className='item-description-info' />
+                                                                    </span>
+                                                                </div>
                                                             </div>
+                                                            <Button onClick={() => this.showItem(i, b.condiment_item_menu_brand)} className='item-btn' type="primary">
+                                                                <span>ADD</span>
+                                                                <IoBagHandleOutline className='item-icon' />
+                                                            </Button>
                                                         </div>
-                                                        <Button onClick={() => this.showItem(i,b.condiment_item_menu_brand)} className='item-btn' type="primary">
-                                                            <span>ADD</span>
-                                                            <IoBagHandleOutline className='item-icon' />
-                                                        </Button>
-                                                    </div>
-                                                </Col>
-                                                )
-                                            }
-                                        </Row>
-                                    </React.Fragment>
-                                }
-                            </React.Fragment>
-                            )
-                        }
-                    </React.Fragment>)
+                                                    </Col>
+                                                    )
+                                                }
+                                            </Row>
+                                        </React.Fragment>
+                                    }
+                                </React.Fragment>
+                                )
+                            }
+                        </React.Fragment>
+                    )
                 }
                 <CondimentModal
-                hideModal={this.hideModal}
-                visible={this.state.condimentsModalVisibility}
-                condiments={this.state.card_condiments}
-                current_item={this.state.current_item}
-                dirtyItem={this.state.dirtyItem}
+                    hideModal={this.hideModal}
+                    visible={this.state.condimentsModalVisibility}
+                    condiments={this.state.card_condiments}
+                    current_item={this.state.current_item}
+                    dirtyItem={this.state.dirtyItem}
 
-                updateItemMethod={this.updateDirtyItemMethod}
-                updateItemCondiment={this.updateDirtyItemCondiment}
-                updateAddonText={this.updateAddonText}
-                add={this.add}
+                    updateItemMethod={this.updateDirtyItemMethod}
+                    updateItemCondiment={this.updateDirtyItemCondiment}
+                    updateAddonText={this.updateAddonText}
+                    add={this.add}
                 />
-                <CheckoutButton location={this.props.location}/>
+                <CheckoutButton location={this.props.location} />
             </div>
         );
     }

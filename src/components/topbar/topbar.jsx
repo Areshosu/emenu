@@ -39,7 +39,8 @@ class TopBar extends Component {
     selectSubCategory = (selected_sub_category, option) => {
         if (option) {
             this.props.updateSelectedSubCategory(selected_sub_category)
-            window.location = `#gsb-${selected_sub_category}`
+            let offset = document.getElementById(`gsb-${selected_sub_category}`).offsetTop
+            window.scrollTo({top: offset - 370})
         }
         this.setState({ selected_sub_category })
     }
@@ -55,10 +56,12 @@ class TopBar extends Component {
         let list_of_menu_items = []
         menubrand_item.forEach((c) => c.menu_brands.forEach((b, i) => Array.prototype.push.apply(list_of_menu_items, b.menu_item)))
         let search_autocomplete_option = list_of_menu_items.filter((i) => i.description.toLowerCase().includes(query))
-        search_autocomplete_option = search_autocomplete_option.map((s) => ({ label: s.description, value: s.description }))
+        search_autocomplete_option = search_autocomplete_option.map((s) => ({ label: s.description, value: s.description,key: s.id }))
         this.setState({ search_autocomplete_option })
     }
-    handleSearchDialog = () => ({})
+    handleSearch = () => {
+        
+    }
     render() {
         return (
             this.state.outlet && <Affix>
@@ -70,8 +73,8 @@ class TopBar extends Component {
                                 <div className='upper-bar-item'>{this.state.outlet.name} - {this.state.outlet.city}</div>
                             </Col>
                             <Col>
-                                <AutoComplete className='search-bar' onSearch={this.handleSearchAutoComplete} options={this.state.search_autocomplete_option} onSelect={this.handleSearchDialog}>
-                                    <Search placeholder='Search' enterButton color='#FF4500'></Search>
+                                <AutoComplete className='search-bar' onSearch={this.handleSearchAutoComplete} options={this.state.search_autocomplete_option}>
+                                    <Search placeholder='Search' enterButton onSearch={(value) => this.handleSearch(value)}></Search>
                                 </AutoComplete>
                             </Col>
                         </Row>
