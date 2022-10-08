@@ -14,7 +14,8 @@ export const menu = createSlice({
             let payload = action.payload.map((p) => ({
                     id: p.id,
                     name: p.description,
-                    subcategories: p.menu_brands.map((sc) => ({id: sc.id, name: sc.description}))
+                    image: p.image,
+                    subcategories: p.menu_brands.map((sc) => ({id: sc.id, name: sc.description, image: sc.image}))
             }))
             state.menuCategory = payload
         },
