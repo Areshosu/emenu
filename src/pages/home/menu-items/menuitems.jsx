@@ -1,4 +1,5 @@
 import { Col, Row } from 'react-grid-system';
+import NoImageAvailable from '../../../assets/images/no_image.png'
 import React, { Component } from 'react';
 import { Button, Badge, Divider } from 'antd';
 import { IoBagHandleOutline } from 'react-icons/io5'
@@ -160,7 +161,8 @@ class MenuItems extends Component {
     render() {
         return (
             <div style={{ backgroundColor: 'rgb(238, 238, 238)' }}>
-                <TopBanners />
+                {/* disable promotions for now :) */}
+                {/* <TopBanners /> */}
                 {
                     this.state.cards.map((c) => this.props.selected_category === c.id &&
                         <React.Fragment key={`cc-${c.id}`}>
@@ -181,7 +183,7 @@ class MenuItems extends Component {
                                                         <div className="item-container">
                                                             <Badge.Ribbon text="new !!" style={{ paddingRight: '20px', display: 'none' }}>
                                                                 {/* <Skeleton.Image active={true} style={{display: this.checkImageLoadingStatus(i.id)? 'none':'block'}}></Skeleton.Image> */}
-                                                                <img src="https://img.freepik.com/premium-photo/big-hamburger-with-double-beef-french-fries_252907-8.jpg?w=2000" className="item-box" id="item-box" alt='' />
+                                                                <img src={i.image? i.image:NoImageAvailable} className="item-box" id="item-box" alt='' />
                                                             </Badge.Ribbon>
                                                             <div className='item-description'>
                                                                 <span className='item-description-title'>{i.name1}</span>

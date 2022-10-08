@@ -5,7 +5,7 @@ const headers = {
 
 class ShopService {
     constructor() {
-        this.domain = 'http://127.0.0.1:8000'
+        this.domain = process.env.REACT_APP_API_URL
     }
 
     index(outlet_id) {
@@ -43,6 +43,13 @@ class ShopService {
             headers: headers,
             method: 'POST',
             body: JSON.stringify(payload)
+        }).then((response) => response.json())
+    }
+
+    pay(outlet_id,order_id) {
+        return fetch(`${this.domain}/api/e-menu/v2/menu-items/outlet/${outlet_id}/order/${order_id}`,{
+            headers: headers,
+            method: 'GET',
         }).then((response) => response.json())
     }
 }

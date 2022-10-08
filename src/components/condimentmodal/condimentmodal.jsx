@@ -1,5 +1,6 @@
 import React from 'react';
 import './condimentmodal.scoped.css'
+import NoImageAvailable from '../../assets/images/no_image_mini.png'
 import { Modal, Collapse, Button, Checkbox, Input } from 'antd';
 import { IoIosAddCircleOutline } from 'react-icons/io'
 const { Panel } = Collapse;
@@ -9,7 +10,7 @@ function CondimentModal(props) {
     return (
         <Modal className='condiment-modal' title={`${props.current_item?.description} RM ${props.current_item?.price1}`} onCancel={() => props.hideModal()} visible={props.visible} style={{ bottom: 10 }} bodyStyle={{ overflowY: 'scroll' }} footer={null}>
             <div>
-                <img src="https://img.freepik.com/premium-photo/big-hamburger-with-double-beef-french-fries_252907-8.jpg?w=2000" className="item-box" id="item-box" alt='' />
+                <img src={props.current_item?.image? props.current_item?.image:NoImageAvailable} className="item-box" id="item-box" alt='' />
             </div>
             <Collapse defaultActiveKey={[2, 3]} expandIconPosition='end'>
                 <Panel header="Select Add-ons" key="1">

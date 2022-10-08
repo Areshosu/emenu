@@ -5,7 +5,7 @@ const headers = {
 
 class MenuItemsService {
     constructor() {
-        this.domain = 'http://127.0.0.1:8000'
+        this.domain = process.env.REACT_APP_API_URL
     }
 
     index(outlet_id) {

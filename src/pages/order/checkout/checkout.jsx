@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { updateLoadingStatus } from '../../../app/stores/appstatus';
 import Recommendation from '../../../components/recommendation/recommendation';
 import CondimentModal from '../../../components/condimentmodal/condimentmodal';
+import SuccessPaymentAlert from '../../../components/successpaymentalert/successpaymentalert';
 import OrderItems from '../../../components/order-items/order-items';
 import './checkout.scoped.css';
 import StorageService from '../../../services/public/storageservice';
@@ -12,7 +13,7 @@ import _ from 'lodash';
 import ShopService from '../../../services/public/shopservice';
 import { compose } from '@reduxjs/toolkit';
 import { useParam } from '../../../components/useParam/useParam';
-import { Collapse, Checkbox, Modal } from 'antd';
+import { Collapse, Checkbox, Modal, message } from 'antd';
 const { Panel } = Collapse;
 
 class Checkout extends Component {
@@ -29,10 +30,13 @@ class Checkout extends Component {
         dirtyItem: {},
         cart: [],
         error_message: null,
-        error_message_visibility: false
+        error_message_visibility: false,
+        success_payment_visibility: false
     }
     componentDidMount() {
         let outlet_id = this.props.params.outlet_id
+        let payment_order_id = this.checkSearchParam('order_id')
+
         const menuitemService = new MenuItemsService()
         menuitemService.index(outlet_id).then((response) => {
             let cards = response.data.filter((c, i) => i === 0) // get first record as recommendation
@@ -49,9 +53,19 @@ class Checkout extends Component {
             this.setState({ payment_methods })
         })
 
+        if (payment_order_id != null) {
+            let success_payment_visibility = true
+            this.setState({success_payment_visibility})
+        }
+
         const storageService = new StorageService()
         let cart = JSON.parse(storageService.retrieveInfo('cart'))
         this.setState({ cart })
+    }
+
+    checkSearchParam(param) {
+        let url = new URL(window.location.href);
+        return url.searchParams.get(param)
     }
 
     componentWillUnmount() {
@@ -100,11 +114,15 @@ class Checkout extends Component {
         let condimentsModalVisibility = false
         this.setState({ condimentsModalVisibility })
     }
+    hidePaymentSuccessAlert = () => {
+        let success_payment_visibility = false
+        this.setState({ success_payment_visibility })
+    }
     resetCart = () => {
         const storageService = new StorageService()
-        
+
         let cart = []
-        storageService.setInfo(['cart',cart])
+        storageService.setInfo(['cart',JSON.stringify(cart)])
         this.setState({cart})
     }
     updateDirtyItemCondiment = (event) => {
@@ -183,9 +201,6 @@ class Checkout extends Component {
         let table_id = Number(storageService.retrieveInfo('table_id'))
         let customer_name = storageService.retrieveInfo('name').split(' ',2)
 
-        let error_message = ''
-        let error_message_visibility = false
-
         let payload = {
             customer: {
                 first_name: customer_name[0],
@@ -198,37 +213,53 @@ class Checkout extends Component {
         }
 
         if (outlet_id === null) {
-            error_message = 'Outlet not found!'
-        } else if (error_message_visibility === null) {
-            error_message = 'Table not found!'
+            return this.showError('Outlet not found!')
+        } else if (table_id === null) {
+            return this.showError('Table not found!')
         } else if (payload.items.length < 1) {
-            error_message = 'Cart is empty'
+            return this.showError('Cart is empty')
         } else if (payload.payment_method == null) {
-            error_message = 'Invalid payment method selected'
-        }
-
-        if (error_message !== '') {
-            error_message_visibility = true
-            this.props.updateLoadingStatus(false)
-            return this.setState({error_message,error_message_visibility})
+            return this.showError('Invalid payment method selected')
         }
 
             const shopService = new ShopService()
             shopService.order(outlet_id,table_id,payload).then((response) => {
                 if (response.status !== 200) {
-                    error_message = 'Something went wrong! :<{'
-                    error_message_visibility = true
-                    return this.setState({error_message,error_message_visibility})
+                    return this.showError('Something went wrong! :<(')
                 } else {
-                    this.resetCart()
+                    if (response.data.payment_online === true) {
+                        this.pay(outlet_id,response.data.order_id)
+                    }
+                  this.resetCart()
                 }
             }).finally(() => this.props.updateLoadingStatus(false))
+    }
+
+    pay = (outlet_id,order_id) => {
+        const shopService = new ShopService()
+        shopService.pay(outlet_id,order_id).then((response) => {
+            if (response.status === 200) {
+                message.warn('You will be redirect to continue your payment,please do not go anywhere :)',8)
+                setTimeout(() => {
+                    window.location.href = response.data.bill_url
+                }, 2000);
+            } else {
+                this.showError(response.message)
+            }
+        }).finally(() => this.props.updateLoadingStatus(false))
     }
 
     hideOnError = () => {
         let error_message = ''
         let error_message_visibility = false
         this.setState({error_message,error_message_visibility})
+    }
+
+    showError = (error_message) => {
+        let error_message_visibility = true
+        this.setState({ error_message, error_message_visibility })
+        // stop loading incase is running
+        this.props.updateLoadingStatus(false)
     }
 
     checkAndAddExistItem = (cart, item) => {
@@ -319,6 +350,8 @@ class Checkout extends Component {
                 <Modal title="Error" visible={this.state.error_message_visibility} cancelButtonProps={{style: {display: 'none'}}} onOk={this.hideOnError}>
                     <p>{this.state.error_message}</p>
                 </Modal>
+                {/* success payment alert */}
+                <SuccessPaymentAlert visible={this.state.success_payment_visibility} hide={this.hidePaymentSuccessAlert}/>
             </React.Fragment>
         );
     }

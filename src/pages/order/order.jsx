@@ -8,7 +8,7 @@ import './order.scoped.css';
 const Order = () => {
     return (
         <React.Fragment>
-                <FlexTopBar />
+                <FlexTopBar title={'ORDER CART'}/>
             <div className='layout-content'>
                 <Outlet />
                 <Footer />

@@ -9,6 +9,7 @@ import Loading from './pages/loading/loading';
 import Checkout from './pages/order/checkout/checkout';
 import User from './pages/home/user/user';
 import Outlet from './pages/welcome/outlet/outlet';
+import Payment from './pages/order/payment/payment';
 
 function App() {
   return (
@@ -24,6 +25,9 @@ function App() {
                 <Route path="checkout" element={<Checkout />} />
               </Route>
             </Route>
+          </Route>
+          <Route path="order">
+            <Route path="payment" element={ <Payment /> }/>
           </Route>
           <Route path="welcome">
             <Route path="outlet/:outlet_id" element={<Outlet />}/>

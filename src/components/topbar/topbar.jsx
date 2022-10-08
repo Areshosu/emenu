@@ -3,6 +3,7 @@ import { Row, Col } from 'react-grid-system';
 import { Affix } from 'antd';
 import './topbar.js';
 import './topbar.scoped.css';
+import NoAvailableImage from '../../assets/images/no_image_mini.png'
 import { Input, AutoComplete } from 'antd'
 import { updateSelectedCategory, updateSelectedSubCategory } from '../../app/stores/menu.js';
 import { connect } from 'react-redux/es/exports.js';
@@ -72,18 +73,18 @@ class TopBar extends Component {
                             <Col xs={12} md={6}>
                                 <div className='upper-bar-item'>{this.state.outlet.name} - {this.state.outlet.city}</div>
                             </Col>
-                            <Col>
+                            {/* <Col>
                                 <AutoComplete className='search-bar' onSearch={this.handleSearchAutoComplete} options={this.state.search_autocomplete_option}>
                                     <Search placeholder='Search' enterButton onSearch={(value) => this.handleSearch(value)}></Search>
                                 </AutoComplete>
-                            </Col>
+                            </Col> */}
                         </Row>
                     </div>
                     <Row className='top-bar-scrollview primary-bar' wrap="nowrap" style={{ backgroundColor: 'white' }}>
                         {this.getCategories().map((i) =>
                             <Col onClick={() => this.selectCategory(i.id, true)} className='top-bar-item' key={i.id} xs={5} md={4} xl={3}>
                                 <div className='item-container bar-item-hover'>
-                                    <img className='item-img' src="https://www.wapititravel.com/blog/wp-content/uploads/2020/01/sukiyaka_healthy_japan_food.jpg" alt="foodimg.png" />
+                                    <img className='item-img' src={i.image? i.image:NoAvailableImage} alt="foodimg.png" />
                                 </div>
                                 <div className='top-bar-item-content'>{i.name}</div>
                                 <div className="bottom-indicator" style={{ display: i.id === this.state.selected_category ? 'block' : 'none' }}></div>
@@ -94,7 +95,7 @@ class TopBar extends Component {
                         {this.getSubcategories().map((i) =>
                             <Col onClick={() => this.selectSubCategory(i.id, true)} className='top-bar-item' key={i.id} xs={4} md={3} xl={2}>
                                 <div className='item-container bar-item-hover item-small'>
-                                    <img className='item-img' src="https://www.wapititravel.com/blog/wp-content/uploads/2020/01/sukiyaka_healthy_japan_food.jpg" alt="foodimg.png" />
+                                    <img className='item-img' src={i.image? i.image:NoAvailableImage} alt="foodimg.png" />
                                 </div>
                                 <div className='top-bar-item-content small-font'>{i.name}</div>
                                 <div className="bottom-indicator" style={{ display: i.id === this.state.selected_sub_category ? 'block' : 'none' }}></div>
