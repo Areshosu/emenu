@@ -13,6 +13,10 @@
     animation: zooming-animation 0.5s infinite alternate;
 }
 
+.primary-color {
+    color: var(--custom-primary-color);
+}
+
 @keyframes zooming-animation {
     from {
         transform: scale(0.1);
