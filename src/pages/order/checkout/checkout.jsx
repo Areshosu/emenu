@@ -12,7 +12,7 @@ import _ from 'lodash';
 import ShopService from '../../../services/public/shopservice';
 import { compose } from '@reduxjs/toolkit';
 import { useParam } from '../../../components/useParam/useParam';
-import { Collapse, Checkbox } from 'antd';
+import { Collapse, Checkbox, Modal } from 'antd';
 const { Panel } = Collapse;
 
 class Checkout extends Component {
@@ -27,7 +27,9 @@ class Checkout extends Component {
         payment_methods: [],
         selected_payment_method: null,
         dirtyItem: {},
-        cart: []
+        cart: [],
+        error_message: null,
+        error_message_visibility: false
     }
     componentDidMount() {
         let outlet_id = this.props.params.outlet_id
@@ -98,6 +100,13 @@ class Checkout extends Component {
         let condimentsModalVisibility = false
         this.setState({ condimentsModalVisibility })
     }
+    resetCart = () => {
+        const storageService = new StorageService()
+        
+        let cart = []
+        storageService.setInfo(['cart',cart])
+        this.setState({cart})
+    }
     updateDirtyItemCondiment = (event) => {
         let condiment_item = event.target.value
         let current_condiments = this.state.dirtyItem.condiments
@@ -143,7 +152,7 @@ class Checkout extends Component {
 
     add = () => {
         let condimentsModalVisibility = false
-        let storageService = new StorageService()
+        const storageService = new StorageService()
         let currentCart = this.state.cart.filter((c) => true)
         let dirtyItem = { ...this.state.dirtyItem, available_condiments: this.state.card_condiments }
         let checkAndAddExistItem = this.checkAndAddExistItem(currentCart, dirtyItem)
@@ -155,8 +164,7 @@ class Checkout extends Component {
     }
 
     edit = (index) => {
-        console.log(index)
-        let storageService = new StorageService()
+        const storageService = new StorageService()
         let cart = this.state.cart.filter((c) => true)
 
         cart[index] = { ...this.state.dirtyItem }
@@ -166,6 +174,61 @@ class Checkout extends Component {
         let condimentsModalVisibility = false
         this.setState({ cart, condimentsModalVisibility })
         storageService.setInfo(['cart', JSON.stringify(cart)])
+    }
+
+    save = () => {
+        this.props.updateLoadingStatus(true)
+        const storageService = new StorageService()
+        let outlet_id = this.props.params.outlet_id
+        let table_id = Number(storageService.retrieveInfo('table_id'))
+        let customer_name = storageService.retrieveInfo('name').split(' ',2)
+
+        let error_message = ''
+        let error_message_visibility = false
+
+        let payload = {
+            customer: {
+                first_name: customer_name[0],
+                last_name: customer_name[1],
+                email: storageService.retrieveInfo('email'),
+                mobile: storageService.retrieveInfo('phone')
+            },
+            items: this.state.cart,
+            payment_method: this.state.selected_payment_method
+        }
+
+        if (outlet_id === null) {
+            error_message = 'Outlet not found!'
+        } else if (error_message_visibility === null) {
+            error_message = 'Table not found!'
+        } else if (payload.items.length < 1) {
+            error_message = 'Cart is empty'
+        } else if (payload.payment_method == null) {
+            error_message = 'Invalid payment method selected'
+        }
+
+        if (error_message !== '') {
+            error_message_visibility = true
+            this.props.updateLoadingStatus(false)
+            return this.setState({error_message,error_message_visibility})
+        }
+
+            const shopService = new ShopService()
+            shopService.order(outlet_id,table_id,payload).then((response) => {
+                if (response.status !== 200) {
+                    error_message = 'Something went wrong! :<{'
+                    error_message_visibility = true
+                    return this.setState({error_message,error_message_visibility})
+                } else {
+                    this.resetCart()
+                }
+            }).finally(() => this.props.updateLoadingStatus(false))
+    }
+
+    hideOnError = () => {
+        let error_message = ''
+        let error_message_visibility = false
+        this.setState({error_message,error_message_visibility})
     }
 
     checkAndAddExistItem = (cart, item) => {
@@ -232,7 +295,7 @@ class Checkout extends Component {
                         </Panel>
                     </Collapse>
                     <div className='justify-center'>
-                        <div className='confirm-btn' style={{backgroundColor: this.isValidOrder()? null :'grey'}} onClick={() => this.props.updateLoadingStatus(true)}>
+                        <div className='confirm-btn' style={{backgroundColor: this.isValidOrder()? null :'grey'}} onClick={this.save}>
                             <span className='confirm-btn-title'>CONFIRM ORDER</span>
                         </div>
                     </div>
@@ -252,6 +315,10 @@ class Checkout extends Component {
                     add={this.add}
                     edit={this.edit}
                 />
+                {/* error dialog */}
+                <Modal title="Error" visible={this.state.error_message_visibility} cancelButtonProps={{style: {display: 'none'}}} onOk={this.hideOnError}>
+                    <p>{this.state.error_message}</p>
+                </Modal>
             </React.Fragment>
         );
     }

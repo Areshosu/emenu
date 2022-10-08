@@ -55,7 +55,7 @@ class Outlet extends Component {
                             <Input placeholder='Email' status={this.state.status.email} value={this.state.userData.email} onChange={(e) => this.handleChange('email',e)}/>
                         </div>
                         <div className="input-holder">
-                            <Input placeholder='Phone Number' status={this.state.status.phone} value={this.state.userData.phone} onChange={(e) => this.handleChange('phone',e)}/>
+                            <Input placeholder='Phone Number etc 60+' status={this.state.status.phone} value={this.state.userData.phone} onChange={(e) => this.handleChange('phone',e)}/>
                         </div>
                         <div className='btn-holder'>
                             <Button className='btn-confirm' type='primary' onClick={this.save}>
@@ -145,7 +145,7 @@ class Outlet extends Component {
             status.email = warningstatus
             hasError = true
         }
-        if (!(this.state.userData.phone.length > 8)) {
+        if (this.state.userData.phone.substring(0,2) !== '60' || this.state.userData.phone.length < 10) {
             status.phone = warningstatus
             hasError = true
         }

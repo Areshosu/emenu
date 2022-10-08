@@ -7,7 +7,7 @@ const { TextArea } = Input;
 
 function CondimentModal(props) {
     return (
-        <Modal className='condiment-modal' title={props.current_item && props.current_item.description} onCancel={() => props.hideModal()} visible={props.visible} style={{ bottom: 10 }} bodyStyle={{ overflowY: 'scroll' }} footer={null}>
+        <Modal className='condiment-modal' title={`${props.current_item?.description} RM ${props.current_item?.price1}`} onCancel={() => props.hideModal()} visible={props.visible} style={{ bottom: 10 }} bodyStyle={{ overflowY: 'scroll' }} footer={null}>
             <div>
                 <img src="https://img.freepik.com/premium-photo/big-hamburger-with-double-beef-french-fries_252907-8.jpg?w=2000" className="item-box" id="item-box" alt='' />
             </div>
