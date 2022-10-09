@@ -304,7 +304,8 @@ class Checkout extends Component {
         const storageService = new StorageService()
         let cart_history = JSON.parse(storageService.retrieveInfo('cart_history'))
         cart_history.push({
-            'id': order_id
+            'id': order_id,
+            'date': new Date().toJSON().slice(0,10).replace(/-/g,'/')
         })
 
         storageService.setInfo(['cart_history',JSON.stringify(cart_history)])

@@ -90,7 +90,7 @@ class PayoutHistory extends Component {
                                 <ul className='row-item item-content item-decor' onClick={() => this.showOrder(cart_history.id)}>
                                     <div className='side-content'>
                                         <img className='side-image' src={NoAvailableImage} alt="shop_image.png" />
-                                        <div className='side-subtitle'> 2022-10-02:24:00 </div>
+                                        <div className='side-subtitle'> {cart_history.date} </div>
                                     </div>
                                     <div className='main-content'>
                                         <div className='content-title'>
