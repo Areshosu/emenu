@@ -35,7 +35,13 @@ class SideBar extends Component {
 
         let searchParams = this.props.location.search
         this.props.navigate(`/welcome/outlet/${outlet_id}${searchParams}`)
-    } 
+    }
+
+    payoutHistory = () => {
+        let outlet_id = this.props.params.outlet_id
+        let searchParams = this.props.location.search
+        this.props.navigate(`/outlet/${outlet_id}/user/order/payout-history${searchParams}`)
+    }
     
     render() {
         return (
@@ -54,6 +60,11 @@ class SideBar extends Component {
                                     {this.state.userData.email}
                                 </span>
                         </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="#/" rel="noopener noreferrer" onClick={this.payoutHistory}>
+                        <span className='powered-title text-style'> Payment History </span>
                     </a>
                 </li>
                 <li>

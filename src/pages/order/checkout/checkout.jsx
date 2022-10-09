@@ -14,6 +14,8 @@ import ShopService from '../../../services/public/shopservice';
 import { compose } from '@reduxjs/toolkit';
 import { useParam } from '../../../components/useParam/useParam';
 import { Collapse, Checkbox, Modal, message } from 'antd';
+import { withRouter } from '../../../components/withRouter/withRouter';
+import { useLocation } from '../../../components/useLocation/useLocation';
 const { Panel } = Collapse;
 
 class Checkout extends Component {
@@ -227,10 +229,15 @@ class Checkout extends Component {
                 if (response.status !== 200) {
                     return this.showError('Something went wrong! :<(')
                 } else {
+                    this.resetCart()
+                    this.setPayoutHistory(response.data.order_id)
                     if (response.data.payment_online === true) {
                         this.pay(outlet_id,response.data.order_id)
+                    } else {
+                        // redirect to payout history if offline payment
+                        let searchParams = this.props.location.search
+                        this.props.navigate(`../payout-history${searchParams}`)
                     }
-                  this.resetCart()
                 }
             }).finally(() => this.props.updateLoadingStatus(false))
     }
@@ -291,6 +298,16 @@ class Checkout extends Component {
 
     isValidOrder = () => {
         return this.state.cart.length > 0 && this.state.selected_payment_method != null
+    }
+    
+    setPayoutHistory = (order_id) => {
+        const storageService = new StorageService()
+        let cart_history = JSON.parse(storageService.retrieveInfo('cart_history'))
+        cart_history.push({
+            'id': order_id
+        })
+
+        storageService.setInfo(['cart_history',JSON.stringify(cart_history)])
     }
 
     render() {
@@ -362,6 +379,8 @@ const mapStateToProps = (state) => ({ isLoading: state.appstat.isLoading })
 const mapDispatchToProps = { updateLoadingStatus, updateCart }
 
 export default compose(
+    withRouter,
     useParam,
+    useLocation,
     connect(mapStateToProps, mapDispatchToProps)
 )(Checkout);

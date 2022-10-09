@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button } from 'antd';
+import NoAvailableImage from '../../assets/images/no_image.png'
 import './recommendation.scoped.css';
 
 class Recommendation extends Component {
@@ -16,7 +17,7 @@ class Recommendation extends Component {
                                     <li key={'item-' + i}>
                                         <div className='box-property'>
                                             <div className='box-group'>
-                                                <img src="https://img.freepik.com/premium-photo/big-hamburger-with-double-beef-french-fries_252907-8.jpg?w=2000" className="item-box" id="item-box" alt='' />
+                                                <img src={i.image? i.image:NoAvailableImage} className="item-box" id="item-box" alt='' />
                                             </div>
                                             <div className='box-group'>
                                                 <div className='box-item-title'>{i.name1}</div>

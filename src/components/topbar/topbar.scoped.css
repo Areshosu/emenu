@@ -28,7 +28,7 @@
 }
 
 .top-bar-item:hover .bar-item-hover {
-    border: 3px solid var(--custom-primary-color);
+    border: 4px solid var(--custom-primary-color);
 }
 
 .top-bar-item-content {

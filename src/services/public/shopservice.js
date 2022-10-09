@@ -36,8 +36,6 @@ class ShopService {
         }).then((response) => response.json())
     }
 
-    // post
-
     order(outlet_id,table_id,payload) {
         return fetch(`${this.domain}/api/e-menu/v2/menu-items/outlet/${outlet_id}/table/${table_id}/order`,{
             headers: headers,
@@ -47,6 +45,13 @@ class ShopService {
     }
 
     pay(outlet_id,order_id) {
+        return fetch(`${this.domain}/api/e-menu/v2/menu-items/outlet/${outlet_id}/order/${order_id}/bill`,{
+            headers: headers,
+            method: 'GET',
+        }).then((response) => response.json())
+    }
+
+    showOrder(outlet_id,order_id) {
         return fetch(`${this.domain}/api/e-menu/v2/menu-items/outlet/${outlet_id}/order/${order_id}`,{
             headers: headers,
             method: 'GET',
