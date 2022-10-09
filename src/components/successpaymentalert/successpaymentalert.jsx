@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { Modal } from 'antd';
+import { Button, Modal } from 'antd';
 import { MdOutlineInsertEmoticon } from 'react-icons/md'
 import './successpaymentalert.scoped.css';
 import { useLocation } from '../useLocation/useLocation';
 import { compose } from '@reduxjs/toolkit';
+import { useParam } from '../useParam/useParam';
+import { withRouter } from '../withRouter/withRouter';
 
 class SuccessPaymentAlert extends Component {
     state = {
@@ -44,9 +46,14 @@ class SuccessPaymentAlert extends Component {
     mapKeyValue(item) {
         return item?.split('=')[1]
     }
+    payoutHistory = () => {
+        let outlet_id = this.props.params.outlet_id
+        let searchParams = this.props.location.search
+        this.props.navigate(`/outlet/${outlet_id}/user/order/payout-history${searchParams}`)
+    }
     render() {
         return (
-            <Modal visible={this.props.visible} footer={null} onCancel={this.props.hide}>
+            <Modal visible={this.props.visible} closable={false} footer={null}>
                 <div className='success-title'>{this.state.paid? 'Payment Success !':'Payment Status'}</div>
                 <div className="row-content-center">
                     <MdOutlineInsertEmoticon color='green' size={50}/>
@@ -64,12 +71,11 @@ class SuccessPaymentAlert extends Component {
                     <span>{this.state.paid? 'Completed':'Pending'}</span>
                 </div>
                 <div className="row-content-between">
-                    <span>Status</span>
-                    <span>{this.state.status}</span>
-                </div>
-                <div className="row-content-between">
                     <span>Signature</span>
                     <span>{this.state.signature}</span>
+                </div>
+                <div className="row-content-center">
+                    <Button type='primary' onClick={this.payoutHistory}>Go to cart</Button>
                 </div>
             </Modal>
         );
@@ -77,5 +83,7 @@ class SuccessPaymentAlert extends Component {
 }
 
 export default compose(
-    useLocation
+    useParam,
+    useLocation,
+    withRouter
 )(SuccessPaymentAlert);

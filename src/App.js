@@ -10,6 +10,7 @@ import Checkout from './pages/order/checkout/checkout';
 import User from './pages/home/user/user';
 import Outlet from './pages/welcome/outlet/outlet';
 import Payment from './pages/order/payment/payment';
+import PayoutHistory from './pages/order/payout-history/payout-history';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
               </Route>
               <Route path="order" element={<Order />}>
                 <Route path="checkout" element={<Checkout />} />
+                <Route path="payout-history" element={<PayoutHistory />}/>
               </Route>
             </Route>
           </Route>

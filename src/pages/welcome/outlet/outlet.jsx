@@ -168,6 +168,7 @@ class Outlet extends Component {
             authService.setInfo(['phone',this.state.userData.phone])
             authService.setInfo(['outlet_id',this.state.outlet.id])
             authService.setInfo(['cart',JSON.stringify([])])
+            authService.setInfo(['cart_history',JSON.stringify([])])
 
             let searchParams = this.props.location.search
             this.props.navigate(`/outlet/${this.state.outlet.id}/user/menu/menu-items${searchParams}`)

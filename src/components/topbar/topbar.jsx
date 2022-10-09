@@ -36,6 +36,7 @@ class TopBar extends Component {
             this.props.updateSelectedCategory(selected_category)
         }
         this.setState({ selected_category })
+        window.scrollTo({top: 0})
     }
     selectSubCategory = (selected_sub_category, option) => {
         if (option) {
