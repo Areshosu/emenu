@@ -6,14 +6,16 @@ export const menu = createSlice({
         menuItem: [],
         menuCategory: [],
         selectedCategory: null,
-        selectedSubCategory: null
+        selectedSubCategory: null,
+        cart: []
     },
     reducers: {
         updateMenuCategory: (state, action) => {
             let payload = action.payload.map((p) => ({
                     id: p.id,
                     name: p.description,
-                    subcategories: p.menu_brands.map((sc) => ({id: sc.id, name: sc.description}))
+                    image: p.image,
+                    subcategories: p.menu_brands.map((sc) => ({id: sc.id, name: sc.description, image: sc.image}))
             }))
             state.menuCategory = payload
         },
@@ -25,10 +27,13 @@ export const menu = createSlice({
         },
         updateSelectedSubCategory: (state, action) => {
             state.selectedSubCategory = action.payload
+        },
+        updateCart: (state,action) => {
+            state.cart = action.payload
         }
     }
 })
 
-export const { updateMenuItem, updateMenuCategory, updateSelectedCategory, updateSelectedSubCategory } = menu.actions
+export const { updateMenuItem, updateMenuCategory, updateSelectedCategory, updateSelectedSubCategory, updateCart } = menu.actions
 
 export default menu.reducer

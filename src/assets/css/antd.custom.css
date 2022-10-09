@@ -20750,7 +20750,7 @@ html {
     display: block;
     width: 9px;
     height: 9px;
-    background-color: var(--custom-primary-color);
+    background-color: var(--custom-primary-7);
     border-radius: 100%;
     transform: scale(0.75);
     transform-origin: 50% 50%;

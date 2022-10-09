@@ -3,23 +3,39 @@ import Error404 from './pages/404';
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import React from 'react';
 import Home from './pages/home/home';
-import MenuItems from './pages/menu-items/menuitems.jsx';
-import Checkout from './pages/checkout/checkout';
+import MenuItems from './pages/home/menu-items/menuitems.jsx';
+import Order from './pages/order/order';
 import Loading from './pages/loading/loading';
+import Checkout from './pages/order/checkout/checkout';
+import User from './pages/home/user/user';
+import Outlet from './pages/welcome/outlet/outlet';
+import Payment from './pages/order/payment/payment';
+import PayoutHistory from './pages/order/payout-history/payout-history';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Loading />}>
-          <Route path="outlet" element={<Home />}>
-            <Route path="menu-items" element={<MenuItems />} />
+          <Route path="outlet/:outlet_id">
+            <Route path="user" element={<User />}>
+              <Route path="menu" element={<Home />}>
+                <Route path="menu-items" element={<MenuItems />} />
+              </Route>
+              <Route path="order" element={<Order />}>
+                <Route path="checkout" element={<Checkout />} />
+                <Route path="payout-history" element={<PayoutHistory />}/>
+              </Route>
+            </Route>
           </Route>
           <Route path="order">
-            <Route path="checkout" element={<Checkout />} />
+            <Route path="payment" element={ <Payment /> }/>
           </Route>
-          <Route path="*" element={<Error404 />} />
+          <Route path="welcome">
+            <Route path="outlet/:outlet_id" element={<Outlet />}/>
+          </Route>
         </Route>
+        <Route path="*" element={<Error404 />} />
       </Routes>
     </BrowserRouter>
   );

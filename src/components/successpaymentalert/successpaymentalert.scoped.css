@@ -1,0 +1,14 @@
+.success-title {
+    color: green;
+    text-align: center;
+}
+
+.row-content-center {
+ display: flex;
+ justify-content: center;   
+}
+
+.row-content-between {
+    display: flex;
+    justify-content: space-between;
+}
