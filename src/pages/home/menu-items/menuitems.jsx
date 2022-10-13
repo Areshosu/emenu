@@ -171,7 +171,7 @@ class MenuItems extends Component {
                                 <Divider className='divider' type='horizontal'></Divider>
                             </div>
                             {
-                                c.menu_brands && c.menu_brands.map((b) => <React.Fragment key={`bb-${b.id}`}>
+                                c.menubrand && c.menubrand.map((b) => <React.Fragment key={`bb-${b.id}`}>
                                     {
                                         !!b.menu_item.length && <React.Fragment>
                                             <div className="gridbar">

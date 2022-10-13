@@ -12,7 +12,7 @@ class Recommendation extends Component {
                 <ul>
                     {
                         this.props.cards.map((c, i) =>
-                            c.menu_brands && c.menu_brands.map((b) =>
+                            c.menubrand && c.menubrand.map((b) =>
                                 b.menu_item.map((i) =>
                                     <li key={'item-' + i}>
                                         <div className='box-property'>

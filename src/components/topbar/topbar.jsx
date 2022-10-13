@@ -56,7 +56,7 @@ class TopBar extends Component {
     handleSearchAutoComplete = (query) => {
         let menubrand_item = this.props.menuItem
         let list_of_menu_items = []
-        menubrand_item.forEach((c) => c.menu_brands.forEach((b, i) => Array.prototype.push.apply(list_of_menu_items, b.menu_item)))
+        menubrand_item.forEach((c) => c.menubrand.forEach((b, i) => Array.prototype.push.apply(list_of_menu_items, b.menu_item)))
         let search_autocomplete_option = list_of_menu_items.filter((i) => i.description.toLowerCase().includes(query))
         search_autocomplete_option = search_autocomplete_option.map((s) => ({ label: s.description, value: s.description,key: s.id }))
         this.setState({ search_autocomplete_option })
