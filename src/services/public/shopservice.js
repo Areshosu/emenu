@@ -9,35 +9,35 @@ class ShopService {
     }
 
     index(outlet_id) {
-        return fetch(`${this.domain}/api/e-menu/v2/menu-items/outlet/${outlet_id}`,{
+        return fetch(`${this.domain}/menu-items/outlet/${outlet_id}`,{
             headers: headers,
             method: 'GET'
         }).then((response) => response.json())
     }
 
     validateTable(outlet_id,table_id) {
-        return fetch(`${this.domain}/api/e-menu/v2/menu-items/outlet/${outlet_id}/table/${table_id}`,{
+        return fetch(`${this.domain}/menu-items/outlet/${outlet_id}/table/${table_id}`,{
             headers: headers,
             method: 'GET'
         }).then((response) => response.json())
     }
 
     tax(outlet_id) {
-        return fetch(`${this.domain}/api/e-menu/v2/menu-items/outlet/${outlet_id}/tax`,{
+        return fetch(`${this.domain}/menu-items/outlet/${outlet_id}/tax`,{
             headers: headers,
             method: 'GET'
         }).then((response) => response.json())
     }
 
     payment_methods(outlet_id) {
-        return fetch(`${this.domain}/api/e-menu/v2/menu-items/outlet/${outlet_id}/payment-methods`,{
+        return fetch(`${this.domain}/menu-items/outlet/${outlet_id}/payment-methods`,{
             headers: headers,
             method: 'GET'
         }).then((response) => response.json())
     }
 
     order(outlet_id,table_id,payload) {
-        return fetch(`${this.domain}/api/e-menu/v2/menu-items/outlet/${outlet_id}/table/${table_id}/order`,{
+        return fetch(`${this.domain}/menu-items/outlet/${outlet_id}/table/${table_id}/order`,{
             headers: headers,
             method: 'POST',
             body: JSON.stringify(payload)
@@ -45,14 +45,14 @@ class ShopService {
     }
 
     pay(outlet_id,order_id) {
-        return fetch(`${this.domain}/api/e-menu/v2/menu-items/outlet/${outlet_id}/order/${order_id}/bill`,{
+        return fetch(`${this.domain}/menu-items/outlet/${outlet_id}/order/${order_id}/bill`,{
             headers: headers,
             method: 'GET',
         }).then((response) => response.json())
     }
 
     showOrder(outlet_id,order_id) {
-        return fetch(`${this.domain}/api/e-menu/v2/menu-items/outlet/${outlet_id}/order/${order_id}`,{
+        return fetch(`${this.domain}/menu-items/outlet/${outlet_id}/order/${order_id}`,{
             headers: headers,
             method: 'GET',
         }).then((response) => response.json())
