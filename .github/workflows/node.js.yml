@@ -29,3 +29,5 @@ jobs:
     - run: npm i -D @craco/craco
     - run: npm i -D postcss@latest
     - run: npm run build
+    env:
+      CI: false
