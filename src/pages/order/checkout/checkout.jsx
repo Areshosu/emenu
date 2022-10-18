@@ -51,8 +51,10 @@ class Checkout extends Component {
             this.props.updateLoadingStatus(false)
         })
         shopService.payment_methods(outlet_id).then((response) => {
-            let payment_methods = response.data
-            this.setState({ payment_methods })
+            if (response.status === 200) {
+                let payment_methods = response.data
+                this.setState({ payment_methods })
+            }
         })
 
         if (payment_order_id != null) {
