@@ -85,7 +85,7 @@ class TopBar extends Component {
                         {this.getCategories().map((i) =>
                             <Col onClick={() => this.selectCategory(i.id, true)} className='top-bar-item' key={i.id} xs={5} md={4} xl={3}>
                                 <div className='item-container bar-item-hover'>
-                                    <img className='item-img' src={i.image? i.image:NoAvailableImage} alt="foodimg.png" />
+                                    <img className='item-img' src={i.image? `${process.env.REACT_APP_BACKEND_URL}/uploads/menu-categories/${i.image}`:NoAvailableImage} alt="foodimg.png" />
                                 </div>
                                 <div className='top-bar-item-content'>{i.name}</div>
                                 <div className="bottom-indicator" style={{ display: i.id === this.state.selected_category ? 'block' : 'none' }}></div>
@@ -96,7 +96,7 @@ class TopBar extends Component {
                         {this.getSubcategories().map((i) =>
                             <Col onClick={() => this.selectSubCategory(i.id, true)} className='top-bar-item' key={i.id} xs={4} md={3} xl={2}>
                                 <div className='item-container bar-item-hover item-small'>
-                                    <img className='item-img' src={i.image? i.image:NoAvailableImage} alt="foodimg.png" />
+                                    <img className='item-img' src={i.image? `${process.env.REACT_APP_BACKEND_URL}/uploads/menu-brands/${i.image}`:NoAvailableImage} alt="foodimg.png" />
                                 </div>
                                 <div className='top-bar-item-content small-font'>{i.name}</div>
                                 <div className="bottom-indicator" style={{ display: i.id === this.state.selected_sub_category ? 'block' : 'none' }}></div>

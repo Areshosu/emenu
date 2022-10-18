@@ -10,7 +10,7 @@ function CondimentModal(props) {
     return (
         <Modal className='condiment-modal' title={`${props.current_item?.description} RM ${props.current_item?.price1}`} onCancel={() => props.hideModal()} visible={props.visible} style={{ bottom: 10 }} bodyStyle={{ overflowY: 'scroll' }} footer={null}>
             <div>
-                <img src={props.current_item?.image? props.current_item?.image:NoImageAvailable} className="item-box" id="item-box" alt='' />
+                <img src={props.current_item?.image? `${process.env.REACT_APP_BACKEND_URL}/uploads/menu-items/${props.current_item.image}`:NoImageAvailable} className="item-box" id="item-box" alt='' />
             </div>
             <Collapse defaultActiveKey={[2, 3]} expandIconPosition='end'>
                 <Panel header="Select Add-ons" key="1">

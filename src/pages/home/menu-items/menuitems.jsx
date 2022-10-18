@@ -183,7 +183,7 @@ class MenuItems extends Component {
                                                         <div className="item-container">
                                                             <Badge.Ribbon text="new !!" style={{ paddingRight: '20px', display: 'none' }}>
                                                                 {/* <Skeleton.Image active={true} style={{display: this.checkImageLoadingStatus(i.id)? 'none':'block'}}></Skeleton.Image> */}
-                                                                <img src={i.image? i.image:NoImageAvailable} className="item-box" id="item-box" alt='' />
+                                                                <img src={i.image? `${process.env.REACT_APP_BACKEND_URL}/uploads/menu-items/${i.image}`:NoImageAvailable} className="item-box" id="item-box" alt='' />
                                                             </Badge.Ribbon>
                                                             <div className='item-description'>
                                                                 <span className='item-description-title'>{i.name1}</span>
