@@ -137,7 +137,7 @@ class Outlet extends Component {
             email: '',
             phone: '',
         }
-        if (this.state.userData.name.split(' ',2).length > 1) {
+        if (!this.state.userData.name.split(' ',2).length > 1) {
             status.name = warningstatus
             hasError = true
         }
