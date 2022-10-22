@@ -2,12 +2,15 @@ import { compose } from '@reduxjs/toolkit';
 import React, { Component } from 'react';
 import { BsPhone } from 'react-icons/bs'
 import { IoMail } from 'react-icons/io5'
-import Avatar from '../../assets/images/user-default.jpg'
+import Avatar from '../../assets/images/user-default.jpg';
+import { AiOutlineRollback } from 'react-icons/ai';
 import AuthenticationService from '../../services/public/authenticationservice';
+import { updateSideBarVisibility } from '../../app/stores/appstatus';
 import { useLocation } from '../useLocation/useLocation';
 import { useParam } from '../useParam/useParam';
 import { withRouter } from '../withRouter/withRouter';
-import './sidebar.scoped.css'
+import './sidebar.scoped.css';
+import { connect } from 'react-redux';
 
 class SideBar extends Component {
     state = {
@@ -26,6 +29,13 @@ class SideBar extends Component {
             phone: authService.retrieveInfo('phone'),
         }
         this.setState({userData})
+
+        let self = this
+        window.addEventListener('resize',function(){
+            if (window.innerWidth > 900) {
+                self.props.updateSideBarVisibility(true)
+            }
+        })
     }
 
     logOut = () => {
@@ -45,8 +55,11 @@ class SideBar extends Component {
     
     render() {
         return (
-            <div className='side-bar-main'>
-                <li>
+            <div className='side-bar-main' id='sidebar' style={{display: this.props.sidebarVisibility? 'block':'none'}}>
+                <li className='list-top-item'>
+                    <AiOutlineRollback className='sidebar-back' size={30} onClick={() => this.props.updateSideBarVisibility(false)}/>
+                </li>
+                <li className='list-top-item'>
                     <a href="#/">
                         <div className='avatar-container'>
                             <img className='avatar-view' src={Avatar} alt="user-avatar.jpg" />
@@ -62,19 +75,19 @@ class SideBar extends Component {
                         </div>
                     </a>
                 </li>
-                <li>
+                <li className='list-item'>
                     <a href="#/" rel="noopener noreferrer" onClick={this.payoutHistory}>
                         <span className='powered-title text-style'> Payment History </span>
                     </a>
                 </li>
-                <li>
+                <li className='list-item'>
                     <a href="#/" rel="noopener noreferrer" onClick={this.logOut}>
                         <span className='powered-title text-style'> Logout </span>
                     </a>
                 </li>
-                <li>
-                    <a href="https://pacomsolution.com" target="_blank" rel="noopener noreferrer">
-                        <span className='powered-title text-style'> Powered by @pacomsolution.com </span>
+                <li className='list-item'>
+                    <a href="https://centricpos.com" target="_blank" rel="noopener noreferrer">
+                        <span className='powered-title text-style'> Powered by centricpos.com </span>
                     </a>
                 </li>
             </div>
@@ -82,8 +95,13 @@ class SideBar extends Component {
     }
 }
 
+const mapStateToProps = (state) => ({ sidebarVisibility: state.appstat.sidebarVisibility })
+
+const mapDispatchToProps = { updateSideBarVisibility }
+
 export default compose(
     withRouter,
     useParam,
-    useLocation
+    useLocation,
+    connect(mapStateToProps,mapDispatchToProps)
 )(SideBar);

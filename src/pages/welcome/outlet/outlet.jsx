@@ -49,7 +49,7 @@ class Outlet extends Component {
                             <span>Login</span>
                         </div>
                         <div className="input-holder">
-                            <Input placeholder='Name' status={this.state.status.name} value={this.state.userData.name} onChange={(e) => this.handleChange('name',e)}/>
+                            <Input placeholder='Name Including your last name' status={this.state.status.name} value={this.state.userData.name} onChange={(e) => this.handleChange('name',e)}/>
                         </div>
                         <div className="input-holder">
                             <Input placeholder='Email' status={this.state.status.email} value={this.state.userData.email} onChange={(e) => this.handleChange('email',e)}/>
@@ -64,7 +64,7 @@ class Outlet extends Component {
                             </Button>
                         </div>
                         <h5>
-                            Powered By @Pacomsolution
+                            Powered By centricpos.com
                         </h5>
                     </div>
                 </div>
@@ -85,7 +85,7 @@ class Outlet extends Component {
         } else {
             shopService.validateTable(outlet_id,table_id).then((response) => {
                 if (response.data != null) {
-                    authService.setInfo(['table_id',table_id])   
+                    authService.setInfo(['table',JSON.stringify(response.data)])   
                 } else {
                     this.showErrorDialog(
                         'Error',

@@ -202,7 +202,7 @@ class Checkout extends Component {
         this.props.updateLoadingStatus(true)
         const storageService = new StorageService()
         let outlet_id = this.props.params.outlet_id
-        let table_id = Number(storageService.retrieveInfo('table_id'))
+        let table_id = Number(JSON.parse(storageService.retrieveInfo('table')).id)
         let customer_name = storageService.retrieveInfo('name').split(' ',2)
 
         let payload = {
@@ -338,7 +338,7 @@ class Checkout extends Component {
                                     this.state.payment_methods.map((method,index) => 
                                     <ul style={{marginTop: '25px'}} key={'method-'+index}>
                                         <Checkbox checked={this.state.selected_payment_method?.id === method.id} onChange={(event) => this.updatePaymentMethod(event)} style={{marginRight: '5%'}} value={method}/>
-                                        <span>{method.name}</span>
+                                        <span>{method.description}</span>
                                     </ul>
                                     )
                                 }
