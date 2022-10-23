@@ -5,7 +5,6 @@ import { Button, Badge, Divider } from 'antd';
 import { IoBagHandleOutline } from 'react-icons/io5'
 import { AiOutlineInfoCircle } from 'react-icons/ai'
 import { MdOutlineFavoriteBorder, MdFavorite } from 'react-icons/md'
-import TopBanners from '../../../components/topbanners/topbanners';
 import CondimentModal from '../../../components/condimentmodal/condimentmodal';
 import CheckoutButton from '../../../components/checkoutbutton/checkoutbutton';
 import './menuitems.js';
@@ -171,7 +170,7 @@ class MenuItems extends Component {
                                 <Divider className='divider' type='horizontal'></Divider>
                             </div>
                             {
-                                c.menu_brands && c.menu_brands.map((b) => <React.Fragment key={`bb-${b.id}`}>
+                                c.menubrand && c.menubrand.map((b) => <React.Fragment key={`bb-${b.id}`}>
                                     {
                                         !!b.menu_item.length && <React.Fragment>
                                             <div className="gridbar">
@@ -183,7 +182,7 @@ class MenuItems extends Component {
                                                         <div className="item-container">
                                                             <Badge.Ribbon text="new !!" style={{ paddingRight: '20px', display: 'none' }}>
                                                                 {/* <Skeleton.Image active={true} style={{display: this.checkImageLoadingStatus(i.id)? 'none':'block'}}></Skeleton.Image> */}
-                                                                <img src={i.image? i.image:NoImageAvailable} className="item-box" id="item-box" alt='' />
+                                                                <img src={i.image? `${process.env.REACT_APP_BACKEND_URL}/uploads/menu-items/${i.image}`:NoImageAvailable} className="item-box" id="item-box" alt='' />
                                                             </Badge.Ribbon>
                                                             <div className='item-description'>
                                                                 <span className='item-description-title'>{i.name1}</span>

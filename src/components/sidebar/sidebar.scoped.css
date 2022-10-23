@@ -1,4 +1,8 @@
-li {
+.list-top-item {
+    list-style: none;
+}
+
+.list-item {
     list-style: none;
     width: auto;
     border-top: 1px solid rgb(205, 205, 205);
@@ -11,6 +15,13 @@ li {
     position: fixed;
     background-color: white;
     overflow-y: scroll;
+    z-index: 110;
+}
+
+.sidebar-back {
+    color: var(--custom-primary-6);
+    margin: 10px 0px 0px 10px;
+    cursor: pointer;
 }
 
 .avatar-container {
@@ -63,8 +74,8 @@ li {
     justify-content: center;
 }
 
-@media screen and (max-width: 900px) {
-    .side-bar-main {
+@media screen and (min-width: 900px) {
+    .sidebar-back {
         display: none;
     }
 }

@@ -12,12 +12,12 @@ class Recommendation extends Component {
                 <ul>
                     {
                         this.props.cards.map((c, i) =>
-                            c.menu_brands && c.menu_brands.map((b) =>
+                            c.menubrand && c.menubrand.map((b) =>
                                 b.menu_item.map((i) =>
                                     <li key={'item-' + i}>
                                         <div className='box-property'>
                                             <div className='box-group'>
-                                                <img src={i.image? i.image:NoAvailableImage} className="item-box" id="item-box" alt='' />
+                                                <img src={i.image? `${process.env.REACT_APP_BACKEND_URL}/uploads/menu-items/${i.image}`:NoAvailableImage} className="item-box" id="item-box" alt='' />
                                             </div>
                                             <div className='box-group'>
                                                 <div className='box-item-title'>{i.name1}</div>

@@ -2,15 +2,20 @@ import { compose } from '@reduxjs/toolkit';
 import React, { Component } from 'react';
 import { BsPhone } from 'react-icons/bs'
 import { IoMail } from 'react-icons/io5'
-import Avatar from '../../assets/images/user-default.jpg'
+import Avatar from '../../assets/images/user-default.jpg';
+import { IoChevronBackOutline } from 'react-icons/io5';
 import AuthenticationService from '../../services/public/authenticationservice';
+import { updateSideBarVisibility } from '../../app/stores/appstatus';
 import { useLocation } from '../useLocation/useLocation';
 import { useParam } from '../useParam/useParam';
 import { withRouter } from '../withRouter/withRouter';
-import './sidebar.scoped.css'
+import './sidebar.scoped.css';
+import { connect } from 'react-redux';
+import StorageService from '../../services/public/storageservice';
 
 class SideBar extends Component {
     state = {
+        shopImage: null,
         userData: {
             name: '',
             email: '',
@@ -25,7 +30,21 @@ class SideBar extends Component {
             email: authService.retrieveInfo('email'),
             phone: authService.retrieveInfo('phone'),
         }
-        this.setState({userData})
+        let shopImage = this.findShopImage()
+        this.setState({ userData, shopImage })
+
+        let self = this
+        window.addEventListener('resize',function(){
+            if (window.innerWidth > 900) {
+                self.props.updateSideBarVisibility(true)
+            }
+        })
+    }
+
+    findShopImage = () => {
+        const storageService = new StorageService()
+        let shop = JSON.parse(storageService.retrieveInfo('outlet'))
+        return shop.image
     }
 
     logOut = () => {
@@ -45,11 +64,14 @@ class SideBar extends Component {
     
     render() {
         return (
-            <div className='side-bar-main'>
-                <li>
+            <div className='side-bar-main' id='sidebar' style={{display: this.props.sidebarVisibility? 'block':'none'}}>
+                <li className='list-top-item'>
+                    <IoChevronBackOutline className='sidebar-back' size={30} onClick={() => this.props.updateSideBarVisibility(false)}/>
+                </li>
+                <li className='list-top-item'>
                     <a href="#/">
                         <div className='avatar-container'>
-                            <img className='avatar-view' src={Avatar} alt="user-avatar.jpg" />
+                            <img className='avatar-view' src={this.state.shopImage? `${process.env.REACT_APP_BACKEND_URL}/uploads/outlet/${this.state.shopImage}` : Avatar} alt="user-avatar.jpg" />
                                 <span className='user-title text-style'> {this.state.userData.name} </span>
                                     <span className='user-description text-style'>
                                         <BsPhone className='icon-style' />
@@ -62,19 +84,19 @@ class SideBar extends Component {
                         </div>
                     </a>
                 </li>
-                <li>
+                <li className='list-item'>
                     <a href="#/" rel="noopener noreferrer" onClick={this.payoutHistory}>
                         <span className='powered-title text-style'> Payment History </span>
                     </a>
                 </li>
-                <li>
+                <li className='list-item'>
                     <a href="#/" rel="noopener noreferrer" onClick={this.logOut}>
                         <span className='powered-title text-style'> Logout </span>
                     </a>
                 </li>
-                <li>
-                    <a href="https://pacomsolution.com" target="_blank" rel="noopener noreferrer">
-                        <span className='powered-title text-style'> Powered by @pacomsolution.com </span>
+                <li className='list-item'>
+                    <a href="https://centricpos.com" target="_blank" rel="noopener noreferrer">
+                        <span className='powered-title text-style'> Powered by centricpos.com </span>
                     </a>
                 </li>
             </div>
@@ -82,8 +104,13 @@ class SideBar extends Component {
     }
 }
 
+const mapStateToProps = (state) => ({ sidebarVisibility: state.appstat.sidebarVisibility })
+
+const mapDispatchToProps = { updateSideBarVisibility }
+
 export default compose(
     withRouter,
     useParam,
-    useLocation
+    useLocation,
+    connect(mapStateToProps,mapDispatchToProps)
 )(SideBar);

@@ -10,6 +10,7 @@
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^14.4.3",
     "antd": "^4.22.2",
+    "antd-country-phone-input": "^4.4.0",
     "axios": "^1.1.2",
     "craco-less": "^2.0.0",
     "craco-plugin-scoped-css": "^1.1.1",
@@ -25,7 +26,8 @@
     "react-router-dom": "6.3.0",
     "react-scripts": "5.0.0",
     "react-spinners": "^0.13.4",
-    "web-vitals": "^3.0.1"
+    "web-vitals": "^3.0.1",
+    "world_countries_lists": "^2.6.0"
   },
   "scripts": {
     "start": "craco start",
