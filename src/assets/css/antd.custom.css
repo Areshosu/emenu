@@ -14096,6 +14096,7 @@ html {
     background-color: inherit;
     border: 1px solid transparent;
     box-shadow: none;
+    width: 150px;
   }
   .custom-input-group-addon .custom-select-open .custom-select-selector,
   .custom-input-group-addon .custom-select-focused .custom-select-selector {

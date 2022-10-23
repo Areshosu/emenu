@@ -15,7 +15,7 @@
     position: fixed;
     background-color: white;
     overflow-y: scroll;
-    z-index: 10;
+    z-index: 110;
 }
 
 .sidebar-back {

@@ -73,7 +73,7 @@ class TopBar extends Component {
                     <div className='top-bar-item-content top-bar-table'>{this.state.table?.description}</div>
                     <div className='top-bar-wrapper'>
                         <Row className='upper-bar'>
-                                <Col md={1} className='sidebar-btn upper-bar-item' id='sidebar-btn-itm'>{<CgDetailsMore onClick={() => this.props.updateSideBarVisibility(true)}/>}</Col>
+                                <Col md={1} className='sidebar-btn upper-bar-item' id='sidebar-btn-itm'>{<CgDetailsMore size={30} onClick={() => this.props.updateSideBarVisibility(true)}/>}</Col>
                                 <Col className='upper-bar-item'>{this.state.outlet.name} - {this.state.outlet.city}</Col>
                             {/* <Col>
                                 <AutoComplete className='search-bar' onSearch={this.handleSearchAutoComplete} options={this.state.search_autocomplete_option}>

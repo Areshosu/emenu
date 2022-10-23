@@ -7,14 +7,18 @@ import App from './App.js'
 import store from './app/store'
 import { Provider } from 'react-redux';
 import { ConfigProvider } from 'antd';
+import { ConfigProvider as PhoneConfigProvider } from 'antd-country-phone-input';
+import en from 'world_countries_lists/data/countries/en/world.json';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
+    <PhoneConfigProvider locale={en}>
         <Provider store={store}>
-    <ConfigProvider prefixCls='custom'>
-            <App />
+            <ConfigProvider prefixCls='custom'>
+                <App />
             </ConfigProvider>
         </Provider>
+    </PhoneConfigProvider>
 );
 
 ConfigProvider.config({

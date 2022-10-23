@@ -59,7 +59,7 @@ class Checkout extends Component {
 
         if (payment_order_id != null) {
             let success_payment_visibility = true
-            this.setState({success_payment_visibility})
+            this.setState({ success_payment_visibility })
         }
 
         const storageService = new StorageService()
@@ -126,8 +126,8 @@ class Checkout extends Component {
         const storageService = new StorageService()
 
         let cart = []
-        storageService.setInfo(['cart',JSON.stringify(cart)])
-        this.setState({cart})
+        storageService.setInfo(['cart', JSON.stringify(cart)])
+        this.setState({ cart })
     }
     updateDirtyItemCondiment = (event) => {
         let condiment_item = event.target.value
@@ -169,7 +169,7 @@ class Checkout extends Component {
         if (event.target.checked) {
             selected_payment_method = event.target.value
         }
-        this.setState({selected_payment_method})
+        this.setState({ selected_payment_method })
     }
 
     add = () => {
@@ -203,12 +203,12 @@ class Checkout extends Component {
         const storageService = new StorageService()
         let outlet_id = this.props.params.outlet_id
         let table_id = Number(JSON.parse(storageService.retrieveInfo('table')).id)
-        let customer_name = storageService.retrieveInfo('name').split(' ',2)
+        let customer_name = storageService.retrieveInfo('name')
 
         let payload = {
             customer: {
-                first_name: customer_name[0],
-                last_name: customer_name[1],
+                first_name: customer_name,
+                last_name: 'customer',
                 email: storageService.retrieveInfo('email'),
                 mobile: storageService.retrieveInfo('phone')
             },
@@ -226,29 +226,29 @@ class Checkout extends Component {
             return this.showError('Invalid payment method selected')
         }
 
-            const shopService = new ShopService()
-            shopService.order(outlet_id,table_id,payload).then((response) => {
-                if (response.status !== 200) {
-                    return this.showError('Something went wrong! :<(')
+        const shopService = new ShopService()
+        shopService.order(outlet_id, table_id, payload).then((response) => {
+            if (response.status !== 200) {
+                return this.showError('Something went wrong! :<(')
+            } else {
+                this.resetCart()
+                this.setPayoutHistory(response.data.order_id)
+                if (response.data.payment_online === true) {
+                    this.pay(outlet_id, response.data.order_id)
                 } else {
-                    this.resetCart()
-                    this.setPayoutHistory(response.data.order_id)
-                    if (response.data.payment_online === true) {
-                        this.pay(outlet_id,response.data.order_id)
-                    } else {
-                        // redirect to payout history if offline payment
-                        let searchParams = this.props.location.search
-                        this.props.navigate(`../payout-history${searchParams}`)
-                    }
+                    // redirect to payout history if offline payment
+                    let searchParams = this.props.location.search
+                    this.props.navigate(`../payout-history${searchParams}`)
                 }
-            }).finally(() => this.props.updateLoadingStatus(false))
+            }
+        }).finally(() => this.props.updateLoadingStatus(false))
     }
 
-    pay = (outlet_id,order_id) => {
+    pay = (outlet_id, order_id) => {
         const shopService = new ShopService()
-        shopService.pay(outlet_id,order_id).then((response) => {
+        shopService.pay(outlet_id, order_id).then((response) => {
             if (response.status === 200) {
-                message.warn('You will be redirect to continue your payment,please do not go anywhere :)',8)
+                message.warn('You will be redirect to continue your payment,please do not go anywhere :)', 8)
                 setTimeout(() => {
                     window.location.href = response.data.bill_url
                 }, 2000);
@@ -261,7 +261,7 @@ class Checkout extends Component {
     hideOnError = () => {
         let error_message = ''
         let error_message_visibility = false
-        this.setState({error_message,error_message_visibility})
+        this.setState({ error_message, error_message_visibility })
     }
 
     showError = (error_message) => {
@@ -286,6 +286,7 @@ class Checkout extends Component {
         }
     }
 
+    // calculation
     renderTotal(carts) {
         let total = 0
         carts.forEach((cart) => {
@@ -293,24 +294,63 @@ class Checkout extends Component {
             let condimentsPrice = Number(_.sum(_.pluck(cart.condiments, 'amount')))
             total += (itemPrice + condimentsPrice) * cart.quantity
         })
-        let taxs_nets = 0
-        this.state.shop_tax.forEach((tax) => taxs_nets += (total / 100) * tax.value)
-        return _.round(total + taxs_nets, 2)
+        return _.round(total, 2)
+    }
+
+    renderTotalNet(carts) {
+        let total = 0
+        let tax_nets = 0
+
+        carts.forEach((cart) => {
+            let itemPrice = Number(cart.item.price1)
+            let has_sst_tax =  !cart.isTakeout
+            let condimentsPrice = Number(_.sum(_.pluck(cart.condiments, 'amount')))
+            let price = (itemPrice + condimentsPrice) * cart.quantity
+            this.state.shop_tax.forEach((tax) => tax_nets += this.calTax(price,tax,has_sst_tax))
+            total += price
+        })
+        return _.round(total + tax_nets,2)
+    }
+
+    renderPerTaxTotal(carts, tax_id) {
+        let tax_net = 0
+
+        let tax = this.state.shop_tax.find((tax) => tax.id === tax_id)
+        carts.forEach((cart) => {
+            let itemPrice = Number(cart.item.price1)
+            let has_sst_tax =  !cart.isTakeout
+            let condimentsPrice = Number(_.sum(_.pluck(cart.condiments, 'amount')))
+            let price = (itemPrice + condimentsPrice) * cart.quantity
+            tax_net += this.calTax(price,tax,has_sst_tax)
+        })
+        return _.round(tax_net,2)
+    }
+
+    calTax (amount,tax_item,has_sst) {
+        let tax = 0
+        if (tax_item.is_service_charge) {
+            if (has_sst) {
+                tax = (amount / 100) * tax_item.value
+            }
+        } else {
+            tax = (amount / 100) * tax_item.value
+        }
+        return tax
     }
 
     isValidOrder = () => {
         return this.state.cart.length > 0 && this.state.selected_payment_method != null
     }
-    
+
     setPayoutHistory = (order_id) => {
         const storageService = new StorageService()
         let cart_history = JSON.parse(storageService.retrieveInfo('cart_history'))
         cart_history.push({
             'id': order_id,
-            'date': new Date().toJSON().slice(0,10).replace(/-/g,'/')
+            'date': new Date().toJSON().slice(0, 10).replace(/-/g, '/')
         })
 
-        storageService.setInfo(['cart_history',JSON.stringify(cart_history)])
+        storageService.setInfo(['cart_history', JSON.stringify(cart_history)])
     }
 
     render() {
@@ -319,34 +359,38 @@ class Checkout extends Component {
                 <Recommendation cards={this.state.cards} showModal={this.showModal} />
                 <OrderItems cart={this.state.cart} updateQuantity={this.updateItemQuantity} showModal={this.showModal} />
                 <div className='external-container'>
+                    <div className='justify-space'>
+                        <span>SUBTOTAL</span>
+                        <span>RM {this.renderTotal(this.state.cart)}</span>
+                    </div>
                     {
                         this.state.shop_tax.map((tax_item, index) =>
                             <div className='justify-space' key={'tax_item-' + index}>
                                 <span>{tax_item.name}</span>
-                                <span>{tax_item.value}%</span>
+                                <span>RM {this.renderPerTaxTotal(this.state.cart, tax_item.id)} - {tax_item.value}%</span>
                             </div>
                         )
                     }
                     <div className='justify-space'>
                         <span>TOTAL PAYMENT</span>
-                        <span>RM {this.renderTotal(this.state.cart)}</span>
+                        <span>RM {this.renderTotalNet(this.state.cart)}</span>
                     </div>
                     <Collapse>
                         <Panel header="Payment Method">
                             <li>
                                 {
-                                    this.state.payment_methods.map((method,index) => 
-                                    <ul style={{marginTop: '25px'}} key={'method-'+index}>
-                                        <Checkbox checked={this.state.selected_payment_method?.id === method.id} onChange={(event) => this.updatePaymentMethod(event)} style={{marginRight: '5%'}} value={method}/>
-                                        <span>{method.description}</span>
-                                    </ul>
+                                    this.state.payment_methods.map((method, index) =>
+                                        <ul style={{ marginTop: '25px' }} key={'method-' + index}>
+                                            <Checkbox checked={this.state.selected_payment_method?.id === method.id} onChange={(event) => this.updatePaymentMethod(event)} style={{ marginRight: '5%' }} value={method} />
+                                            <span>{method.description}</span>
+                                        </ul>
                                     )
                                 }
                             </li>
                         </Panel>
                     </Collapse>
                     <div className='justify-center'>
-                        <div className='confirm-btn' style={{backgroundColor: this.isValidOrder()? null :'grey'}} onClick={this.save}>
+                        <div className='confirm-btn' style={{ backgroundColor: this.isValidOrder() ? null : 'grey' }} onClick={this.save}>
                             <span className='confirm-btn-title'>CONFIRM ORDER</span>
                         </div>
                     </div>
@@ -367,11 +411,11 @@ class Checkout extends Component {
                     edit={this.edit}
                 />
                 {/* error dialog */}
-                <Modal title="Error" visible={this.state.error_message_visibility} cancelButtonProps={{style: {display: 'none'}}} onOk={this.hideOnError}>
+                <Modal title="Error" visible={this.state.error_message_visibility} cancelButtonProps={{ style: { display: 'none' } }} onOk={this.hideOnError}>
                     <p>{this.state.error_message}</p>
                 </Modal>
                 {/* success payment alert */}
-                <SuccessPaymentAlert visible={this.state.success_payment_visibility} hide={this.hidePaymentSuccessAlert}/>
+                <SuccessPaymentAlert visible={this.state.success_payment_visibility} hide={this.hidePaymentSuccessAlert} />
             </React.Fragment>
         );
     }

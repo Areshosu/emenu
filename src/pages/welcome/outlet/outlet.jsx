@@ -8,12 +8,14 @@ import StoreLogo from '../../../assets/images/powered-logo-loader.png'
 import './outlet.scoped.css';
 import ShopService from '../../../services/public/shopservice';
 import { compose } from '@reduxjs/toolkit';
+import CountryPhoneInput from 'antd-country-phone-input';
 import { withRouter } from '../../../components/withRouter/withRouter';
 import { useParam } from '../../../components/useParam/useParam';
 import { useLocation } from '../../../components/useLocation/useLocation';
 
 class Outlet extends Component {
     state = {
+        phoneNumber: { short: 'MY'},
         outlet: {
             id: '',
             name: '',
@@ -49,13 +51,13 @@ class Outlet extends Component {
                             <span>Login</span>
                         </div>
                         <div className="input-holder">
-                            <Input placeholder='Name Including your last name' status={this.state.status.name} value={this.state.userData.name} onChange={(e) => this.handleChange('name',e)}/>
+                            <Input placeholder='Name' status={this.state.status.name} value={this.state.userData.name} onChange={(e) => this.handleChange('name',e)}/>
                         </div>
                         <div className="input-holder">
                             <Input placeholder='Email' status={this.state.status.email} value={this.state.userData.email} onChange={(e) => this.handleChange('email',e)}/>
                         </div>
                         <div className="input-holder">
-                            <Input placeholder='Phone Number etc 60+' status={this.state.status.phone} value={this.state.userData.phone} onChange={(e) => this.handleChange('phone',e)}/>
+                            <CountryPhoneInput type='number' placeholder='Phone Number' status={this.state.status.phone} value={this.state.phoneNumber} onChange={(e) => this.handlePhoneChange(e)}/>
                         </div>
                         <div className='btn-holder'>
                             <Button className='btn-confirm' type='primary' onClick={this.save}>
@@ -129,6 +131,14 @@ class Outlet extends Component {
         this.setState({userData})
     }
 
+    handlePhoneChange = (event) => {
+        if (event.code !== undefined && event.phone !== undefined) {
+            let phoneNumber = `${event.code}${event.phone}`
+            let userData = {...this.state.userData,phone: phoneNumber}
+            this.setState({userData})
+        } 
+    }
+
     checkInput = () => {
         let warningstatus = 'error'
         let hasError = false
@@ -137,15 +147,22 @@ class Outlet extends Component {
             email: '',
             phone: '',
         }
-        if (!(this.state.userData.name.split(' ',2).length > 1)) {
+
+        let name = this.state.userData.name
+        let email = this.state.userData.email
+        let phone = this.state.userData.phone
+
+        let emailRule = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        let phoneRule = /^\d+$/
+        if (!name.length) {
             status.name = warningstatus
             hasError = true
         }
-        if (!this.state.userData.email.length) {
+        if (!email.length || !emailRule.test(email)) {
             status.email = warningstatus
             hasError = true
         }
-        if (this.state.userData.phone.substring(0,2) !== '60' || this.state.userData.phone.length < 10) {
+        if (phone.length < 5 || !phoneRule.test(phone)) {
             status.phone = warningstatus
             hasError = true
         }

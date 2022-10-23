@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { BsPhone } from 'react-icons/bs'
 import { IoMail } from 'react-icons/io5'
 import Avatar from '../../assets/images/user-default.jpg';
-import { AiOutlineRollback } from 'react-icons/ai';
+import { IoChevronBackOutline } from 'react-icons/io5';
 import AuthenticationService from '../../services/public/authenticationservice';
 import { updateSideBarVisibility } from '../../app/stores/appstatus';
 import { useLocation } from '../useLocation/useLocation';
@@ -57,7 +57,7 @@ class SideBar extends Component {
         return (
             <div className='side-bar-main' id='sidebar' style={{display: this.props.sidebarVisibility? 'block':'none'}}>
                 <li className='list-top-item'>
-                    <AiOutlineRollback className='sidebar-back' size={30} onClick={() => this.props.updateSideBarVisibility(false)}/>
+                    <IoChevronBackOutline className='sidebar-back' size={30} onClick={() => this.props.updateSideBarVisibility(false)}/>
                 </li>
                 <li className='list-top-item'>
                     <a href="#/">
