@@ -4,7 +4,7 @@ import { IoMdExit } from 'react-icons/io';
 import { connect } from 'react-redux';
 import { updateLoadingStatus } from '../../../app/stores/appstatus';
 import AuthenticationService from '../../../services/public/authenticationservice.js';
-import StoreLogo from '../../../assets/images/powered-logo-loader.png'
+import DefaultCompanyLogo from '../../../assets/images/powered-logo-loader.png'
 import './outlet.scoped.css';
 import ShopService from '../../../services/public/shopservice';
 import { compose } from '@reduxjs/toolkit';
@@ -38,7 +38,7 @@ class Outlet extends Component {
             <React.Fragment>
                 <div className='flex-top-bar'>
                     <div className='flex-content'>
-                        <img className='store-logo' src={StoreLogo} alt="storelogo.png" style={{margin: 'auto'}}/>
+                        <img className='store-logo' src={this.state.outlet.image? `${process.env.REACT_APP_BACKEND_URL}/uploads/outlet/${this.state.outlet.image}`:DefaultCompanyLogo} alt="storelogo.png" style={{margin: 'auto'}}/>
                         <div className='flex-group'>
                             <span className='flex-title'>{this.state.outlet.name}</span>
                         </div>
@@ -154,7 +154,7 @@ class Outlet extends Component {
 
         let emailRule = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
         let phoneRule = /^\d+$/
-        if (!name.length) {
+        if (name.length < 3) {
             status.name = warningstatus
             hasError = true
         }
@@ -162,7 +162,7 @@ class Outlet extends Component {
             status.email = warningstatus
             hasError = true
         }
-        if (phone.length < 5 || !phoneRule.test(phone)) {
+        if (phone.length < 10 || !phoneRule.test(phone)) {
             status.phone = warningstatus
             hasError = true
         }

@@ -11,9 +11,11 @@ import { useParam } from '../useParam/useParam';
 import { withRouter } from '../withRouter/withRouter';
 import './sidebar.scoped.css';
 import { connect } from 'react-redux';
+import StorageService from '../../services/public/storageservice';
 
 class SideBar extends Component {
     state = {
+        shopImage: null,
         userData: {
             name: '',
             email: '',
@@ -28,7 +30,8 @@ class SideBar extends Component {
             email: authService.retrieveInfo('email'),
             phone: authService.retrieveInfo('phone'),
         }
-        this.setState({userData})
+        let shopImage = this.findShopImage()
+        this.setState({ userData, shopImage })
 
         let self = this
         window.addEventListener('resize',function(){
@@ -36,6 +39,12 @@ class SideBar extends Component {
                 self.props.updateSideBarVisibility(true)
             }
         })
+    }
+
+    findShopImage = () => {
+        const storageService = new StorageService()
+        let shop = JSON.parse(storageService.retrieveInfo('outlet'))
+        return shop.image
     }
 
     logOut = () => {
@@ -62,7 +71,7 @@ class SideBar extends Component {
                 <li className='list-top-item'>
                     <a href="#/">
                         <div className='avatar-container'>
-                            <img className='avatar-view' src={Avatar} alt="user-avatar.jpg" />
+                            <img className='avatar-view' src={this.state.shopImage? `${process.env.REACT_APP_BACKEND_URL}/uploads/outlet/${this.state.shopImage}` : Avatar} alt="user-avatar.jpg" />
                                 <span className='user-title text-style'> {this.state.userData.name} </span>
                                     <span className='user-description text-style'>
                                         <BsPhone className='icon-style' />
