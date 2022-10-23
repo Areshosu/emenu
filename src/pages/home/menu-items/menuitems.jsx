@@ -5,7 +5,6 @@ import { Button, Badge, Divider } from 'antd';
 import { IoBagHandleOutline } from 'react-icons/io5'
 import { AiOutlineInfoCircle } from 'react-icons/ai'
 import { MdOutlineFavoriteBorder, MdFavorite } from 'react-icons/md'
-import TopBanners from '../../../components/topbanners/topbanners';
 import CondimentModal from '../../../components/condimentmodal/condimentmodal';
 import CheckoutButton from '../../../components/checkoutbutton/checkoutbutton';
 import './menuitems.js';

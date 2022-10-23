@@ -4,16 +4,18 @@ import { IoMdExit } from 'react-icons/io';
 import { connect } from 'react-redux';
 import { updateLoadingStatus } from '../../../app/stores/appstatus';
 import AuthenticationService from '../../../services/public/authenticationservice.js';
-import StoreLogo from '../../../assets/images/powered-logo-loader.png'
+import DefaultCompanyLogo from '../../../assets/images/powered-logo-loader.png'
 import './outlet.scoped.css';
 import ShopService from '../../../services/public/shopservice';
 import { compose } from '@reduxjs/toolkit';
+import CountryPhoneInput from 'antd-country-phone-input';
 import { withRouter } from '../../../components/withRouter/withRouter';
 import { useParam } from '../../../components/useParam/useParam';
 import { useLocation } from '../../../components/useLocation/useLocation';
 
 class Outlet extends Component {
     state = {
+        phoneNumber: { short: 'MY'},
         outlet: {
             id: '',
             name: '',
@@ -36,7 +38,7 @@ class Outlet extends Component {
             <React.Fragment>
                 <div className='flex-top-bar'>
                     <div className='flex-content'>
-                        <img className='store-logo' src={StoreLogo} alt="storelogo.png" style={{margin: 'auto'}}/>
+                        <img className='store-logo' src={this.state.outlet.image? `${process.env.REACT_APP_BACKEND_URL}/uploads/outlet/${this.state.outlet.image}`:DefaultCompanyLogo} alt="storelogo.png" style={{margin: 'auto'}}/>
                         <div className='flex-group'>
                             <span className='flex-title'>{this.state.outlet.name}</span>
                         </div>
@@ -55,7 +57,7 @@ class Outlet extends Component {
                             <Input placeholder='Email' status={this.state.status.email} value={this.state.userData.email} onChange={(e) => this.handleChange('email',e)}/>
                         </div>
                         <div className="input-holder">
-                            <Input placeholder='Phone Number etc 60+' status={this.state.status.phone} value={this.state.userData.phone} onChange={(e) => this.handleChange('phone',e)}/>
+                            <CountryPhoneInput type='number' placeholder='Phone Number' status={this.state.status.phone} value={this.state.phoneNumber} onChange={(e) => this.handlePhoneChange(e)}/>
                         </div>
                         <div className='btn-holder'>
                             <Button className='btn-confirm' type='primary' onClick={this.save}>
@@ -64,7 +66,7 @@ class Outlet extends Component {
                             </Button>
                         </div>
                         <h5>
-                            Powered By @Pacomsolution
+                            Powered By centricpos.com
                         </h5>
                     </div>
                 </div>
@@ -85,7 +87,7 @@ class Outlet extends Component {
         } else {
             shopService.validateTable(outlet_id,table_id).then((response) => {
                 if (response.data != null) {
-                    authService.setInfo(['table_id',table_id])   
+                    authService.setInfo(['table',JSON.stringify(response.data)])   
                 } else {
                     this.showErrorDialog(
                         'Error',
@@ -129,6 +131,14 @@ class Outlet extends Component {
         this.setState({userData})
     }
 
+    handlePhoneChange = (event) => {
+        if (event.code !== undefined && event.phone !== undefined) {
+            let phoneNumber = `${event.code}${event.phone}`
+            let userData = {...this.state.userData,phone: phoneNumber}
+            this.setState({userData})
+        } 
+    }
+
     checkInput = () => {
         let warningstatus = 'error'
         let hasError = false
@@ -137,15 +147,22 @@ class Outlet extends Component {
             email: '',
             phone: '',
         }
-        if (!(this.state.userData.name.split(' ',2).length > 1)) {
+
+        let name = this.state.userData.name
+        let email = this.state.userData.email
+        let phone = this.state.userData.phone
+
+        let emailRule = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        let phoneRule = /^\d+$/
+        if (name.length < 3) {
             status.name = warningstatus
             hasError = true
         }
-        if (!this.state.userData.email.length) {
+        if (!email.length || !emailRule.test(email)) {
             status.email = warningstatus
             hasError = true
         }
-        if (this.state.userData.phone.substring(0,2) !== '60' || this.state.userData.phone.length < 10) {
+        if (phone.length < 10 || !phoneRule.test(phone)) {
             status.phone = warningstatus
             hasError = true
         }

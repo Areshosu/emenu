@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import TopBar from '../../components/topbar/topbar.jsx';
-import SideBar from '../../components/sidebar/sidebar';
+import SideBar from '../../components/sidebar/sidebar.jsx';
 import Footer from '../../components/footer/footer';
 import './home.scoped.css'
 

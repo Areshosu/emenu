@@ -13,6 +13,7 @@ import { useParam } from '../../../components/useParam/useParam';
 
 class PayoutHistory extends Component {
     state = {
+        outlet: null,
         cart_history: [],
         modal_visibility: false,
         current_item: null,
@@ -22,7 +23,8 @@ class PayoutHistory extends Component {
 
         const storageService = new StorageService()
         let cart_history = JSON.parse(storageService.retrieveInfo('cart_history'))
-        this.setState({ cart_history })
+        let outlet = JSON.parse(storageService.retrieveInfo('outlet'))
+        this.setState({ cart_history, outlet })
 
         this.props.updateLoadingStatus(false)
     }
@@ -89,7 +91,7 @@ class PayoutHistory extends Component {
                             <li className='row' key={'cart-h-' + index}>
                                 <ul className='row-item item-content item-decor' onClick={() => this.showOrder(cart_history.id)}>
                                     <div className='side-content'>
-                                        <img className='side-image' src={NoAvailableImage} alt="shop_image.png" />
+                                        <img className='side-image' src={this.state.outlet?.image? `${process.env.REACT_APP_BACKEND_URL}/uploads/outlet/${this.state.outlet.image}` : NoAvailableImage} alt="shop_image.png" />
                                         <div className='side-subtitle'> {cart_history.date} </div>
                                     </div>
                                     <div className='main-content'>

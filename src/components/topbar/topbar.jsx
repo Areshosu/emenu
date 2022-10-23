@@ -4,11 +4,13 @@ import { Affix } from 'antd';
 import './topbar.js';
 import './topbar.scoped.css';
 import NoAvailableImage from '../../assets/images/no_image_mini.png'
-import { Input, AutoComplete } from 'antd'
+// import { Input } from 'antd'
+import { updateSideBarVisibility } from '../../app/stores/appstatus.js';
 import { updateSelectedCategory, updateSelectedSubCategory } from '../../app/stores/menu.js';
 import { connect } from 'react-redux/es/exports.js';
 import AuthenticationService from '../../services/public/authenticationservice.js';
-const { Search } = Input;
+import { CgDetailsMore } from 'react-icons/cg';
+// const { Search } = Input;
 
 class TopBar extends Component {
     state = {
@@ -17,7 +19,7 @@ class TopBar extends Component {
             location: '',
             city: ''
         },
-        table_id: null,
+        table: null,
         categories: [],
         selected_category: null,
         selected_sub_category: null,
@@ -26,8 +28,8 @@ class TopBar extends Component {
     componentDidMount = () => {
         const authService = new AuthenticationService();
         let outlet = JSON.parse(authService.retrieveInfo('outlet'));
-        let table_id = JSON.parse(authService.retrieveInfo('table_id'))
-        this.setState({ outlet, table_id })
+        let table = JSON.parse(authService.retrieveInfo('table'))
+        this.setState({ outlet, table })
     }
 
     // // userinterface script
@@ -68,12 +70,11 @@ class TopBar extends Component {
         return (
             this.state.outlet && <Affix>
                 <div className='top-bar'>
-                    <div className='top-bar-item-content top-bar-table'>TABLE # {this.state.table_id}</div>
+                    <div className='top-bar-item-content top-bar-table'>{this.state.table?.description}</div>
                     <div className='top-bar-wrapper'>
                         <Row className='upper-bar'>
-                            <Col xs={12} md={6}>
-                                <div className='upper-bar-item'>{this.state.outlet.name} - {this.state.outlet.city}</div>
-                            </Col>
+                                <Col md={1} className='sidebar-btn upper-bar-item' id='sidebar-btn-itm'>{<CgDetailsMore size={30} onClick={() => this.props.updateSideBarVisibility(true)}/>}</Col>
+                                <Col className='upper-bar-item'>{this.state.outlet.name} - {this.state.outlet.city}</Col>
                             {/* <Col>
                                 <AutoComplete className='search-bar' onSearch={this.handleSearchAutoComplete} options={this.state.search_autocomplete_option}>
                                     <Search placeholder='Search' enterButton onSearch={(value) => this.handleSearch(value)}></Search>
@@ -109,8 +110,8 @@ class TopBar extends Component {
     }
 }
 
-const mapStateToProps = (state) => ({ menuItem: state.menu.menuItem, menuCategories: state.menu.menuCategory })
+const mapStateToProps = (state) => ({ menuItem: state.menu.menuItem, menuCategories: state.menu.menuCategory, sidebarVisibility: state.appstat.sidebarVisibility })
 
-const mapDispatchToProps = { updateSelectedCategory, updateSelectedSubCategory }
+const mapDispatchToProps = { updateSelectedCategory, updateSelectedSubCategory, updateSideBarVisibility }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TopBar);

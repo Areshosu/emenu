@@ -4,13 +4,18 @@
     height: 100%;
     width: 100%;
     position: fixed;
-    z-index: 100;
+    z-index: 200;
 
     backdrop-filter: blur(5px);
 }
 
 .loading-logo {
+    border-radius: 500px;
     animation: zooming-animation 0.5s infinite alternate;
+}
+
+.loading-logo-default {
+    align-items: center;
 }
 
 .primary-color {
