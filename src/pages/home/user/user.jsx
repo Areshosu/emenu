@@ -16,6 +16,13 @@ const User = () => {
                 authService.deleteInfo()
                 navigate(`/welcome/outlet/${outlet_id}${search}`)
             }
+            let table_id = new URL(window.location.href).searchParams.get("table_id");
+                authService.checkTable(table_id).then((isPreviousTable) => {
+                    if (!isPreviousTable) {
+                        authService.deleteInfo()
+                        navigate(`/welcome/outlet/${outlet_id}${search}`)
+                    }
+            })
         })
     },[ navigate,
         outlet_id,

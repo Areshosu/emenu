@@ -188,7 +188,7 @@ class MenuItems extends Component {
                                                                 <span className='item-description-title'>{i.name1}</span>
                                                                 <span className='item-description-long'> {i.description} </span>
                                                                 <div className='item-description-group'>
-                                                                    <span className='item-description-subtitle'>MYR {i.price1}</span>
+                                                                    <span className='item-description-subtitle'>RM {i.price1}</span>
                                                                     <span className='item-description-group-icon'>
                                                                         {this.state.card_favorite.find((c) => c.id === i.id) ? <MdFavorite onClick={() => this.updateFavorite(i, false)} className='item-description-info' style={{ marginRight: '10px' }} /> : <MdOutlineFavoriteBorder onClick={() => this.updateFavorite(i, true)} className='item-description-info' style={{ marginRight: '10px' }} />}
                                                                         <AiOutlineInfoCircle className='item-description-info' />

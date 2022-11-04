@@ -13,8 +13,8 @@ class Recommendation extends Component {
                     {
                         this.props.cards.map((c, i) =>
                             c.menubrand && c.menubrand.map((b) =>
-                                b.menu_item.map((i) =>
-                                    <li key={'item-' + i}>
+                                b.menu_item.map((i,k) =>
+                                    <li key={'item-' + k}>
                                         <div className='box-property'>
                                             <div className='box-group'>
                                                 <img src={i.image? `${process.env.REACT_APP_BACKEND_URL}/uploads/menu-items/${i.image}`:NoAvailableImage} className="item-box" id="item-box" alt='' />
