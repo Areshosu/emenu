@@ -23,6 +23,10 @@ class Checkout extends Component {
         isEdit: false,
         cards: [],
         shop_tax: [],
+        shop_currency: {
+            roundPlace: 0,
+            decimalPlace: 2
+        },
         condimentsModalVisibility: false,
         current_item: null,
         current_index: null,
@@ -48,6 +52,14 @@ class Checkout extends Component {
         shopService.tax(outlet_id).then((response) => {
             let shop_tax = response.data
             this.setState({ shop_tax })
+        })
+        shopService.currency(outlet_id).then((response) => {
+            let shop_currency = {
+                ...this.state.shop_tax,
+                roundPlace: response.data.roundPlace,
+                decimalPlace: response.data.decimalPlace
+            }
+            this.setState({ shop_currency })
             this.props.updateLoadingStatus(false)
         })
         shopService.payment_methods(outlet_id).then((response) => {
@@ -294,7 +306,8 @@ class Checkout extends Component {
             let condimentsPrice = Number(_.sum(_.pluck(cart.condiments, 'amount')))
             total += (itemPrice + condimentsPrice) * cart.quantity
         })
-        return _.round(total, 2)
+        let decimalPlace = this.state.shop_currency.decimalPlace
+        return _.round(total, 2).toFixed(decimalPlace)
     }
 
     renderTotalNet(carts) {
@@ -309,7 +322,10 @@ class Checkout extends Component {
             this.state.shop_tax.forEach((tax) => tax_nets += this.calTax(price,tax,has_sst_tax))
             total += price
         })
-        return _.round(total + tax_nets,2)
+        let net_total = total + tax_nets
+        let roundPlace = this.state.shop_currency.roundPlace
+        let decimalPlace = this.state.shop_currency.decimalPlace
+        return this.rounding(net_total,roundPlace).toFixed(decimalPlace)
     }
 
     renderPerTaxTotal(carts, tax_id) {
@@ -323,7 +339,8 @@ class Checkout extends Component {
             let price = (itemPrice + condimentsPrice) * cart.quantity
             tax_net += this.calTax(price,tax,has_sst_tax)
         })
-        return _.round(tax_net,2)
+        let decimalPlace = this.state.shop_currency.decimalPlace
+        return _.round(tax_net,2).toFixed(decimalPlace)
     }
 
     calTax (amount,tax_item,has_sst) {
@@ -353,6 +370,15 @@ class Checkout extends Component {
         storageService.setInfo(['cart_history', JSON.stringify(cart_history)])
     }
 
+    rounding = (number,roundPlace) => {
+        let fraction = 1 / roundPlace
+        if (roundPlace !== 0) {
+            return Math.round(number * fraction) / fraction
+        } else {
+            return number
+        }
+    }
+
     render() {
         return (
             <React.Fragment>
@@ -367,7 +393,7 @@ class Checkout extends Component {
                         this.state.shop_tax.map((tax_item, index) =>
                             <div className='justify-space' key={'tax_item-' + index}>
                                 <span>{tax_item.name}</span>
-                                <span>RM {this.renderPerTaxTotal(this.state.cart, tax_item.id)} - {tax_item.value}%</span>
+                                <span>{tax_item.value}% - RM {this.renderPerTaxTotal(this.state.cart, tax_item.id)}</span>
                             </div>
                         )
                     }
