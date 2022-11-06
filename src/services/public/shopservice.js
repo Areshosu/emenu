@@ -29,6 +29,13 @@ class ShopService {
         }).then((response) => response.json())
     }
 
+    currency(outlet_id) {
+        return fetch(`${this.domain}/menu-items/outlet/${outlet_id}/currency`,{
+            headers: headers,
+            method: 'GET'
+        }).then((response) => response.json())
+    }
+
     payment_methods(outlet_id) {
         return fetch(`${this.domain}/menu-items/outlet/${outlet_id}/payment-methods`,{
             headers: headers,

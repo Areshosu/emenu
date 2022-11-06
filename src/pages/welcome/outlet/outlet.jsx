@@ -75,9 +75,20 @@ class Outlet extends Component {
     }
     componentDidMount() {
         let outlet_id = this.props.params.outlet_id
-        let table_id = this.checkTable()
+        let table_id = this.findTable()
         const authService = new AuthenticationService()
         const shopService = new ShopService()
+
+        authService.isLoggedIn(outlet_id).then((isLoggedIn) => {
+            if (isLoggedIn) {
+                authService.checkTable(table_id).then((isPreviousTable) => {
+                    if (isPreviousTable) {
+                        let searchParams = this.props.location.search
+                        this.props.navigate(`/outlet/${outlet_id}/user/menu/menu-items${searchParams}`)
+                    }
+                })
+            }
+        })
 
         if (!table_id) {
             this.showErrorDialog(
@@ -97,18 +108,13 @@ class Outlet extends Component {
             })
         }
 
-        authService.isLoggedIn(outlet_id).then((isLoggedIn) => {
-            if (isLoggedIn) {
-                let searchParams = this.props.location.search
-                    this.props.navigate(`/outlet/${outlet_id}/user/menu/menu-items${searchParams}`)
-            }
-        })
-
-            shopService.index(outlet_id).then((res) => {
-                let outlet = res.data
+        shopService.index(outlet_id).then((response) => {
+            if (response.status === 200) {
+                let outlet = response.data
                 authService.setInfo(['outlet',JSON.stringify(outlet)])
                 this.setState({outlet})
                 this.props.updateLoadingStatus(false)
+            }
        })
     }
     componentWillUnmount() {
@@ -170,7 +176,7 @@ class Outlet extends Component {
         return !hasError
     }
 
-    checkTable = () => {
+    findTable = () => {
         var url = new URL(window.location.href);
         return url.searchParams.get("table_id");
     }
