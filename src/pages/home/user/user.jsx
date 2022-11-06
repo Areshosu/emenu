@@ -16,13 +16,17 @@ const User = () => {
                 authService.deleteInfo()
                 navigate(`/welcome/outlet/${outlet_id}${search}`)
             }
-            let table_id = new URL(window.location.href).searchParams.get("table_id");
+            let bill_no = authService.searchParam("bill_no");
+            let table_id = authService.searchParam("table_id");
+            // avoid table check when redirect from payment
+            if (bill_no === null) {
                 authService.checkTable(table_id).then((isPreviousTable) => {
                     if (!isPreviousTable) {
                         authService.deleteInfo()
                         navigate(`/welcome/outlet/${outlet_id}${search}`)
                     }
             })
+            }
         })
     },[ navigate,
         outlet_id,
