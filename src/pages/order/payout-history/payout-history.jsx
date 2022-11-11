@@ -130,7 +130,7 @@ class PayoutHistory extends Component {
                             </div>
                             <div className="row row-between">
                                 <span>Status</span>
-                                <span style={{ color: this.state.current_item.paid ? 'green' : 'orange', fontWeight: 'bold' }}>{this.state.current_item.paid ? 'PAID' : 'PENDING'}</span>
+                                <span style={{ color: this.state.current_item.paid ? 'green' : 'orange', fontWeight: 'bold' }}>{!!this.state.current_item.online_payment? (this.state.current_item.paid ? 'PAID' : 'PENDING') : 'Pay at cashier'}</span>
                             </div>
                             <div className="row row-between">
                                 <span>Order ID</span>

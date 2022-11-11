@@ -8,6 +8,10 @@ class AuthenticationService {
     
     deleteInfo = (param = null) => param? localStorage.removeItem(param[0],param[1]) : localStorage.clear()
 
+    async searchParam (query) {
+        return new URL(window.location.href).searchParams.get(query)
+    }
+
     async checkTable (current_table_id) {
         let table = JSON.parse(localStorage.getItem('table'))
         return Number(current_table_id) === Number(table?.id)
