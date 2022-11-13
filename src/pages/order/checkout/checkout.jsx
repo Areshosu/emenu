@@ -407,7 +407,7 @@ class Checkout extends Component {
                                 {
                                     this.state.payment_methods.map((method, index) =>
                                         <ul style={{ marginTop: '25px' }} key={'method-' + index}>
-                                            <Checkbox checked={this.state.selected_payment_method?.id === method.id} onChange={(event) => this.updatePaymentMethod(event)} style={{ marginRight: '5%' }} value={method} />
+                                            <Checkbox disabled={!method.available} checked={this.state.selected_payment_method?.id === method.id} onChange={(event) => this.updatePaymentMethod(event)} style={{ marginRight: '5%' }} value={method} />
                                             <span>{method.description}</span>
                                         </ul>
                                     )
