@@ -73,7 +73,8 @@ class MenuItems extends Component {
                 name2: current_item.name2,
                 price1: current_item.price1,
                 price2: current_item.price2,
-                price3: current_item.price3
+                price3: current_item.price3,
+                image: current_item.image
             },
             available_condiments: [],
             condiments: [],

@@ -103,7 +103,8 @@ class Checkout extends Component {
                 name2: current_item.name2,
                 price1: current_item.price1,
                 price2: current_item.price2,
-                price3: current_item.price3
+                price3: current_item.price3,
+                image: current_item.image
             },
             condiments: [],
             available_condiments: [],
@@ -407,7 +408,7 @@ class Checkout extends Component {
                                 {
                                     this.state.payment_methods.map((method, index) =>
                                         <ul style={{ marginTop: '25px' }} key={'method-' + index}>
-                                            <Checkbox checked={this.state.selected_payment_method?.id === method.id} onChange={(event) => this.updatePaymentMethod(event)} style={{ marginRight: '5%' }} value={method} />
+                                            <Checkbox disabled={!method.available} checked={this.state.selected_payment_method?.id === method.id} onChange={(event) => this.updatePaymentMethod(event)} style={{ marginRight: '5%' }} value={method} />
                                             <span>{method.description}</span>
                                         </ul>
                                     )
