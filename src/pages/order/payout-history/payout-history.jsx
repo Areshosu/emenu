@@ -160,6 +160,10 @@ class PayoutHistory extends Component {
                                 <span>{`RM ${this.state.current_item.svctotal}`}</span>
                             </div>
                             <div className="row row-between">
+                                <span>Rounding Adjustment</span>
+                                <span>{`RM ${this.state.current_item.rounding}`}</span>
+                            </div>
+                            <div className="row row-between">
                                 <span>Total Amount</span>
                                 <span>{`RM ${this.state.current_item.total}`}</span>
                             </div>
