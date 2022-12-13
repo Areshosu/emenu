@@ -41,6 +41,30 @@
     font-weight: lighter;
 }
 
+.icon {
+    display: block;
+    margin: auto;
+}
+
+.bank-images {
+    display: block;
+    margin: 20px auto 20px auto;
+    width: 80%;
+}
+
+.input-holder {
+    padding: 7px 9px 7px 9px;
+}
+
+.text-highlight {
+    color: red;
+    text-decoration: underline;
+}
+
+.text-tips {
+    font-size: 10px;
+}
+
 @keyframes idle-animation {
     0% {
         transform: translate(-2px);

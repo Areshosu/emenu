@@ -13,7 +13,10 @@ import _ from 'lodash';
 import ShopService from '../../../services/public/shopservice';
 import { compose } from '@reduxjs/toolkit';
 import { useParam } from '../../../components/useParam/useParam';
-import { Collapse, Checkbox, Modal, message } from 'antd';
+import CountryPhoneInput from 'antd-country-phone-input';
+import FpxNBank from '../../../assets/images/fpx-logo-and-banks.png'
+import { Input, Collapse, Checkbox, Modal, message } from 'antd';
+import { RiSecurePaymentFill } from 'react-icons/ri';
 import { withRouter } from '../../../components/withRouter/withRouter';
 import { useLocation } from '../../../components/useLocation/useLocation';
 const { Panel } = Collapse;
@@ -23,11 +26,23 @@ class Checkout extends Component {
         isEdit: false,
         cards: [],
         shop_tax: [],
+        phoneNumber: { short: 'MY' },
+        userData: {
+            name: '',
+            email: '',
+            mobile: ''
+        },
+        status: {
+            name: '',
+            email: '',
+            mobile: '',
+        },
         shop_currency: {
             roundPlace: 0,
             decimalPlace: 2
         },
         condimentsModalVisibility: false,
+        customerDetailFormModalVisibility: false,
         current_item: null,
         current_index: null,
         card_condiments: [],
@@ -211,32 +226,65 @@ class Checkout extends Component {
         storageService.setInfo(['cart', JSON.stringify(cart)])
     }
 
+    prepareCustomerDetails = () => {
+        const storageService = new StorageService()
+        return {
+            first_name: storageService.retrieveInfo('name'),
+            last_name: 'customer',
+            email: storageService.retrieveInfo('email'),
+            mobile: storageService.retrieveInfo('phone')
+        }
+
+    }
+
+    saveCustomerDetails = () => {
+        if (this.checkInput()) {
+            let isGuestLogin = false
+            let customerDetailFormModalVisibility = false
+
+            const storageService = new StorageService()
+            storageService.setInfo(['name', this.state.userData.name])
+            storageService.setInfo(['email', this.state.userData.email])
+            storageService.setInfo(['phone', this.state.userData.mobile])
+            storageService.setInfo(['is_guest_login', isGuestLogin])
+            this.setState({customerDetailFormModalVisibility})
+        }
+    }
+
     save = () => {
         this.props.updateLoadingStatus(true)
         const storageService = new StorageService()
         let outlet_id = this.props.params.outlet_id
         let table_id = Number(JSON.parse(storageService.retrieveInfo('table')).id)
-        let customer_name = storageService.retrieveInfo('name')
-
-        let payload = {
-            customer: {
-                first_name: customer_name,
-                last_name: 'customer',
-                email: storageService.retrieveInfo('email'),
-                mobile: storageService.retrieveInfo('phone')
-            },
-            items: this.state.cart,
-            payment_method: this.state.selected_payment_method
-        }
+        let customer_details = this.prepareCustomerDetails()
 
         if (outlet_id === null) {
             return this.showError('Outlet not found!')
         } else if (table_id === null) {
             return this.showError('Table not found!')
-        } else if (payload.items.length < 1) {
+        } else if (this.state.cart.length < 1) {
             return this.showError('Cart is empty')
-        } else if (payload.payment_method == null) {
+        } else if (this.state.selected_payment_method == null) {
             return this.showError('Invalid payment method selected')
+        }
+
+        if (this.state.selected_payment_method.is_online_payment === true) {
+            if (storageService.retrieveInfo('is_guest_login') === 'true') {
+                this.props.updateLoadingStatus(false)
+                let customerDetailFormModalVisibility = true
+                return this.setState({customerDetailFormModalVisibility})
+            }
+        }
+
+        let payload = {
+            customer: {
+                first_name: customer_details?.first_name,
+                last_name: customer_details?.last_name,
+                email: customer_details?.email,
+                mobile: customer_details?.mobile
+            },
+            items: this.state.cart,
+            payment_method: this.state.selected_payment_method
         }
 
         const shopService = new ShopService()
@@ -313,7 +361,7 @@ class Checkout extends Component {
 
         let roundPlace = this.state.shop_currency.roundPlace
         let decimalPlace = this.state.shop_currency.decimalPlace
-        return this.rounding(total_amount + tax_amount,roundPlace).toFixed(decimalPlace)
+        return this.rounding(total_amount + tax_amount, roundPlace).toFixed(decimalPlace)
     }
 
     renderPerTaxTotal(tax_id) {
@@ -321,7 +369,7 @@ class Checkout extends Component {
         let calculus = this.calTotal([tax_item])
 
         let decimalPlace = this.state.shop_currency.decimalPlace
-        return _.round(calculus.tax_amount,2).toFixed(decimalPlace)
+        return _.round(calculus.tax_amount, 2).toFixed(decimalPlace)
     }
 
     renderRounding() {
@@ -330,21 +378,21 @@ class Checkout extends Component {
 
         let roundPlace = this.state.shop_currency.roundPlace
         let decimalPlace = this.state.shop_currency.decimalPlace
-        let rounding_value = this.rounding(total_amount,roundPlace) - total_amount
+        let rounding_value = this.rounding(total_amount, roundPlace) - total_amount
         return rounding_value.toFixed(decimalPlace)
     }
 
-    calTotal (shop_tax = []) {
+    calTotal(shop_tax = []) {
         let total_amount = 0
         let tax_amount = 0
         this.state.cart.forEach((cart) => {
             let itemPrice = Number(cart.item.price1)
             let condimentsPrice = Number(_.sum(_.pluck(cart.condiments, 'amount')))
-            if (shop_tax.length != 0) {
-                let has_sst_tax =  !cart.isTakeout
+            if (shop_tax.length !== 0) {
+                let has_sst_tax = !cart.isTakeout
                 let total_item_price = (itemPrice + condimentsPrice) * cart.quantity
                 shop_tax.forEach((tax_item) => {
-                    tax_amount += this.calTax(total_item_price,tax_item,has_sst_tax)
+                    tax_amount += this.calTax(total_item_price, tax_item, has_sst_tax)
                 })
             }
             total_amount += (itemPrice + condimentsPrice) * cart.quantity
@@ -355,7 +403,7 @@ class Checkout extends Component {
         };
     }
 
-    calTax (amount,tax_item,has_sst) {
+    calTax(amount, tax_item, has_sst) {
         let tax = 0
         if (tax_item.is_service_charge) {
             if (has_sst) {
@@ -382,7 +430,7 @@ class Checkout extends Component {
         storageService.setInfo(['cart_history', JSON.stringify(cart_history)])
     }
 
-    rounding = (number,roundPlace) => {
+    rounding = (number, roundPlace) => {
         let fraction = 1 / roundPlace
         if (roundPlace !== 0) {
             return Math.round(number * fraction) / fraction
@@ -452,6 +500,21 @@ class Checkout extends Component {
                     add={this.add}
                     edit={this.edit}
                 />
+                <Modal closable={false} visible={this.state.customerDetailFormModalVisibility} cancelButtonProps={{ style: { display: 'none' } }} onOk={this.saveCustomerDetails}>
+                        <RiSecurePaymentFill className='icon' size={100} color={'green'}/>
+                            <img className='bank-images' src={ FpxNBank } alt="fpx-and-banks.png"/>
+                    <div className="input-holder">
+                        <Input placeholder='Name' value={this.state.userData.name} status={this.state.status.name} onChange={(e) => this.handleChange('name', e)}/>
+                    </div>
+                    <div className="input-holder">
+                        <Input placeholder='Email' value={this.state.userData.email} status={this.state.status.email} onChange={(e) => this.handleChange('email', e)}/>
+                    </div>
+                    <div className="input-holder">
+                        <CountryPhoneInput type='number' placeholder='Phone Number' status={this.state.status.mobile} value={this.state.phoneNumber} onChange={(e) => this.handlePhoneChange(e)}/>
+                    </div>
+                    <span className='text-tips text-highlight'>Information acquired will be submitted and processed securely to the Payment Gateway (EbizzPay) for one-time use only.</span> <br />
+                    <span className='text-tips'>Please refer to ebizzpay.tawk.help/article/privacy-policy for more information about privacy policy.</span>
+                </Modal>
                 {/* error dialog */}
                 <Modal title="Error" visible={this.state.error_message_visibility} cancelButtonProps={{ style: { display: 'none' } }} onOk={this.hideOnError}>
                     <p>{this.state.error_message}</p>
@@ -460,6 +523,52 @@ class Checkout extends Component {
                 <SuccessPaymentAlert visible={this.state.success_payment_visibility} hide={this.hidePaymentSuccessAlert} />
             </React.Fragment>
         );
+    }
+
+    handleChange = (key, event) => {
+        let temp = {}
+        temp[key] = event.target.value
+        let userData = { ...this.state.userData, ...temp }
+        this.setState({ userData })
+    }
+
+    handlePhoneChange = (event) => {
+        if (event.code !== undefined && event.phone !== undefined) {
+            let phoneNumber = `${event.code}${event.phone}`
+            let userData = { ...this.state.userData, mobile: phoneNumber }
+            this.setState({ userData })
+        }
+    }
+
+    checkInput = () => {
+        let warningstatus = 'error'
+        let hasError = false
+        let status = {
+            name: '',
+            email: '',
+            mobile: '',
+        }
+
+        let name = this.state.userData.name
+        let email = this.state.userData.email
+        let mobile = this.state.userData.mobile
+
+        let emailRule = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        let mobileRule = /^\d+$/
+        if (name.length < 3) {
+            status.name = warningstatus
+            hasError = true
+        }
+        if (!email.length || !emailRule.test(email)) {
+            status.email = warningstatus
+            hasError = true
+        }
+        if (mobile.length < 10 || !mobileRule.test(mobile)) {
+            status.mobile = warningstatus
+            hasError = true
+        }
+        this.setState({ status })
+        return !hasError
     }
 }
 
