@@ -141,6 +141,22 @@ class Outlet extends Component {
         }
 
         if (isGuestLogin) {
+            userData.name = userData.email = userData.phone ='Guest'
+        }
+
+        this.setState({
+            userData,
+            loginAsGuest: isGuestLogin
+        })
+    }
+    loginAsGuest = (isGuestLogin) => {
+        let userData = {
+            name: '',
+            email: '',
+            phone: ''
+        }
+
+        if (isGuestLogin) {
             userData.name = 'Customer'
             userData.email = 'customercentricpos@gmail.com'
             userData.phone = '60123456789'
@@ -151,6 +167,26 @@ class Outlet extends Component {
             loginAsGuest: isGuestLogin
         })
     }
+    loginAsGuest = (isGuestLogin) => {
+        let userData = {
+            name: '',
+            email: '',
+            phone: ''
+        }
+
+
+        if (isGuestLogin) {
+            userData.name = 'Customer'
+            userData.email = 'customercentricpos@gmail.com'
+            userData.phone = '60123456789'
+        }
+
+        this.setState({
+            userData,
+            loginAsGuest: isGuestLogin
+        })
+    }
+
 
     handleChange = (key, event) => {
         let temp = {}
@@ -205,9 +241,15 @@ class Outlet extends Component {
 
     save = () => {
 
-        if (this.checkInput() && !this.props.isLoading) {
+        // skip input check while guest login
+        let checkInput = this.state.loginAsGuest? true : this.checkInput()
+
+
+        if (checkInput && !this.props.isLoading) {
             this.props.updateLoadingStatus(true)
             const authService = new AuthenticationService();
+
+            authService.setInfo(['is_guest_login', this.state.loginAsGuest])
             authService.setInfo(['name', this.state.userData.name])
             authService.setInfo(['email', this.state.userData.email])
             authService.setInfo(['phone', this.state.userData.phone])
