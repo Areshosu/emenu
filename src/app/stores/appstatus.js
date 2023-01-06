@@ -4,7 +4,7 @@ export const appstat = createSlice({
     name: 'appstat',
     initialState: {
         isLoading: true,
-        sidebarVisibility: true,
+        sidebarVisibility: false,
     },
     reducers: {
         updateSideBarVisibility: (state, action) => {

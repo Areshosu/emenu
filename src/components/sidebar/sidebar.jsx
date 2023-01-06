@@ -12,6 +12,7 @@ import { withRouter } from '../withRouter/withRouter';
 import './sidebar.scoped.css';
 import { connect } from 'react-redux';
 import StorageService from '../../services/public/storageservice';
+import $ from 'jquery';
 
 class SideBar extends Component {
     state = {
@@ -20,6 +21,14 @@ class SideBar extends Component {
             name: '',
             email: '',
             phone: ''
+        }
+    }
+
+    onUpdateSideBarVisibilityHandler = (window) => {
+        if (window.innerWidth > 900) {
+            this.props.updateSideBarVisibility(true)
+        } else {
+            this.props.updateSideBarVisibility(false)
         }
     }
 
@@ -34,11 +43,13 @@ class SideBar extends Component {
         this.setState({ userData, shopImage })
 
         let self = this
+        self.onUpdateSideBarVisibilityHandler(window)
+
         window.addEventListener('resize',function(){
-            if (window.innerWidth > 900) {
-                self.props.updateSideBarVisibility(true)
-            }
+            self.onUpdateSideBarVisibilityHandler(window)
         })
+
+        
     }
 
     findShopImage = () => {
