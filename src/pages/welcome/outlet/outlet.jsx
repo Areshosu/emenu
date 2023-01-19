@@ -150,6 +150,7 @@ class Outlet extends Component {
         })
     }
 
+
     handleChange = (key, event) => {
         let temp = {}
         temp[key] = event.target.value
