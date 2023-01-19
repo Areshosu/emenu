@@ -82,6 +82,29 @@ class PayoutHistory extends Component {
             this.setState({isLoading})
         })
     }
+
+    orderStatus(current_item) {
+        if (current_item.status === 1) {
+            if (current_item.online_payment) {
+                if (current_item.paid) {
+                    return 'Order Paid'
+                }
+                    return 'Order Unpaid (Online Payment)'
+            } else {
+                return 'Pay At Cashier'
+            }
+        }
+
+        if (current_item.status === 2)
+            return 'Order Accepted'
+
+        if (current_item.status === 3)
+            return 'Order Rejected'
+
+        if (current_item.status === 4)
+            return 'Order Completed'
+    }
+
     render() {
         return (
             <React.Fragment>
@@ -130,7 +153,7 @@ class PayoutHistory extends Component {
                             </div>
                             <div className="row row-between">
                                 <span>Status</span>
-                                <span style={{ color: this.state.current_item.paid ? 'green' : 'orange', fontWeight: 'bold' }}>{!!this.state.current_item.online_payment? (this.state.current_item.paid ? 'PAID' : 'PENDING') : 'Pay at cashier'}</span>
+                                <span>{this.orderStatus(this.state.current_item)}</span>
                             </div>
                             <div className="row row-between">
                                 <span>Order ID</span>

@@ -149,44 +149,6 @@ class Outlet extends Component {
             loginAsGuest: isGuestLogin
         })
     }
-    loginAsGuest = (isGuestLogin) => {
-        let userData = {
-            name: '',
-            email: '',
-            phone: ''
-        }
-
-        if (isGuestLogin) {
-            userData.name = 'Customer'
-            userData.email = 'customercentricpos@gmail.com'
-            userData.phone = '60123456789'
-        }
-
-        this.setState({
-            userData,
-            loginAsGuest: isGuestLogin
-        })
-    }
-    loginAsGuest = (isGuestLogin) => {
-        let userData = {
-            name: '',
-            email: '',
-            phone: ''
-        }
-
-
-        if (isGuestLogin) {
-            userData.name = 'Customer'
-            userData.email = 'customercentricpos@gmail.com'
-            userData.phone = '60123456789'
-        }
-
-        this.setState({
-            userData,
-            loginAsGuest: isGuestLogin
-        })
-    }
-
 
     handleChange = (key, event) => {
         let temp = {}
