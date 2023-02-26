@@ -15,7 +15,8 @@ import { useLocation } from '../../../components/useLocation/useLocation';
 
 class Outlet extends Component {
     state = {
-        phoneNumber: { short: 'MY'},
+        phoneNumber: { short: 'MY' },
+        loginAsGuest: false,
         outlet: {
             id: '',
             name: '',
@@ -38,7 +39,7 @@ class Outlet extends Component {
             <React.Fragment>
                 <div className='flex-top-bar'>
                     <div className='flex-content'>
-                        <img className='store-logo' src={this.state.outlet.image? `${process.env.REACT_APP_BACKEND_URL}/uploads/outlet/${this.state.outlet.image}`:DefaultCompanyLogo} alt="storelogo.png" style={{margin: 'auto'}}/>
+                        <img className='store-logo' src={this.state.outlet.image ? `${process.env.REACT_APP_BACKEND_URL}/uploads/outlet/${this.state.outlet.image}` : DefaultCompanyLogo} alt="storelogo.png" style={{ margin: 'auto' }} />
                         <div className='flex-group'>
                             <span className='flex-title'>{this.state.outlet.name}</span>
                         </div>
@@ -48,20 +49,23 @@ class Outlet extends Component {
                 <div className='inner-layout'>
                     <div className="main-container">
                         <div className='login-title tab'>
-                            <span>Login</span>
+                            <span onClick={() => this.loginAsGuest(false)} style={{ color: this.state.loginAsGuest ? null : 'orange' }}>Login</span>
+                            <span onClick={() => this.loginAsGuest(true)} style={{ color: this.state.loginAsGuest ? 'orange' : null }}>Guest</span>
                         </div>
-                        <div className="input-holder">
-                            <Input placeholder='Name' status={this.state.status.name} value={this.state.userData.name} onChange={(e) => this.handleChange('name',e)}/>
-                        </div>
-                        <div className="input-holder">
-                            <Input placeholder='Email' status={this.state.status.email} value={this.state.userData.email} onChange={(e) => this.handleChange('email',e)}/>
-                        </div>
-                        <div className="input-holder">
-                            <CountryPhoneInput type='number' placeholder='Phone Number' status={this.state.status.phone} value={this.state.phoneNumber} onChange={(e) => this.handlePhoneChange(e)}/>
+                        <div className="input-container" style={{display: this.state.loginAsGuest? 'none' : 'block'}}>
+                            <div className="input-holder">
+                                <Input placeholder='Name' status={this.state.status.name} value={this.state.userData.name} onChange={(e) => this.handleChange('name', e)} />
+                            </div>
+                            <div className="input-holder">
+                                <Input placeholder='Email' status={this.state.status.email} value={this.state.userData.email} onChange={(e) => this.handleChange('email', e)} />
+                            </div>
+                            <div className="input-holder">
+                                <CountryPhoneInput type='number' placeholder='Phone Number' status={this.state.status.phone} value={this.state.phoneNumber} onChange={(e) => this.handlePhoneChange(e)} />
+                            </div>
                         </div>
                         <div className='btn-holder'>
                             <Button className='btn-confirm' type='primary' onClick={this.save}>
-                                <span>let's go</span>
+                                <span>{this.state.loginAsGuest? "Continue as guest" : "Let's go"}</span>
                                 <IoMdExit />
                             </Button>
                         </div>
@@ -96,14 +100,14 @@ class Outlet extends Component {
                 'Table not found :<('
             )
         } else {
-            shopService.validateTable(outlet_id,table_id).then((response) => {
+            shopService.validateTable(outlet_id, table_id).then((response) => {
                 if (response.data != null) {
-                    authService.setInfo(['table',JSON.stringify(response.data)])   
+                    authService.setInfo(['table', JSON.stringify(response.data)])
                 } else {
                     this.showErrorDialog(
                         'Error',
                         'Invalid Table :<('
-                    )   
+                    )
                 }
             })
         }
@@ -111,38 +115,55 @@ class Outlet extends Component {
         shopService.index(outlet_id).then((response) => {
             if (response.status === 200) {
                 let outlet = response.data
-                authService.setInfo(['outlet',JSON.stringify(outlet)])
-                this.setState({outlet})
+                authService.setInfo(['outlet', JSON.stringify(outlet)])
+                this.setState({ outlet })
                 this.props.updateLoadingStatus(false)
             }
-       })
+        })
     }
     componentWillUnmount() {
         this.props.updateLoadingStatus(true)
     }
-    showErrorDialog = (title,message) => {
+    showErrorDialog = (title, message) => {
         Modal.error({
             title: title,
             content: message,
             centered: true,
             closable: false,
-            okButtonProps: {style: {display: 'none'}}
+            okButtonProps: { style: { display: 'none' } }
+        })
+    }
+    loginAsGuest = (isGuestLogin) => {
+        let userData = {
+            name: '',
+            email: '',
+            phone: ''
+        }
+
+        if (isGuestLogin) {
+            userData.name = userData.email = userData.phone ='Guest'
+        }
+
+        this.setState({
+            userData,
+            loginAsGuest: isGuestLogin
         })
     }
 
-    handleChange = (key,event) => {
+
+    handleChange = (key, event) => {
         let temp = {}
         temp[key] = event.target.value
-        let userData = {...this.state.userData,...temp}
-        this.setState({userData})
+        let userData = { ...this.state.userData, ...temp }
+        this.setState({ userData })
     }
 
     handlePhoneChange = (event) => {
         if (event.code !== undefined && event.phone !== undefined) {
             let phoneNumber = `${event.code}${event.phone}`
-            let userData = {...this.state.userData,phone: phoneNumber}
-            this.setState({userData})
-        } 
+            let userData = { ...this.state.userData, phone: phoneNumber }
+            this.setState({ userData })
+        }
     }
 
     checkInput = () => {
@@ -172,7 +193,7 @@ class Outlet extends Component {
             status.phone = warningstatus
             hasError = true
         }
-        this.setState({status})
+        this.setState({ status })
         return !hasError
     }
 
@@ -183,15 +204,21 @@ class Outlet extends Component {
 
     save = () => {
 
-        if (this.checkInput() && !this.props.isLoading) {
+        // skip input check while guest login
+        let checkInput = this.state.loginAsGuest? true : this.checkInput()
+
+
+        if (checkInput && !this.props.isLoading) {
             this.props.updateLoadingStatus(true)
             const authService = new AuthenticationService();
-            authService.setInfo(['name',this.state.userData.name])
-            authService.setInfo(['email',this.state.userData.email])
-            authService.setInfo(['phone',this.state.userData.phone])
-            authService.setInfo(['outlet_id',this.state.outlet.id])
-            authService.setInfo(['cart',JSON.stringify([])])
-            authService.setInfo(['cart_history',JSON.stringify([])])
+
+            authService.setInfo(['is_guest_login', this.state.loginAsGuest])
+            authService.setInfo(['name', this.state.userData.name])
+            authService.setInfo(['email', this.state.userData.email])
+            authService.setInfo(['phone', this.state.userData.phone])
+            authService.setInfo(['outlet_id', this.state.outlet.id])
+            authService.setInfo(['cart', JSON.stringify([])])
+            authService.setInfo(['cart_history', JSON.stringify([])])
 
             let searchParams = this.props.location.search
             this.props.navigate(`/outlet/${this.state.outlet.id}/user/menu/menu-items${searchParams}`)
